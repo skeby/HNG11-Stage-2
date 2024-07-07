@@ -1,8 +1,8 @@
-import { Input as AntdInput, InputProps } from "antd";
+import { Input as AntdInput, InputProps } from "antd"
 
 interface Props extends InputProps {}
 const Input = (props: Props) => {
-  const { classNames, ...rest } = props;
+  const { classNames, ...rest } = props
   return (
     <AntdInput
       {...rest}
@@ -13,7 +13,7 @@ const Input = (props: Props) => {
         }
       }
     />
-  );
-};
+  )
+}
 
-export default Input;
+export default Input

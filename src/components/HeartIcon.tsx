@@ -1,30 +1,30 @@
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go"
 
 interface Props {
-  isFavorite: boolean;
-  onFavoriteChange?: (isFavorite: boolean) => void;
+  isFavorite: boolean
+  onFavoriteChange?: (isFavorite: boolean) => void
 }
 
 const HeartIcon = ({ isFavorite, onFavoriteChange }: Props) => {
   return (
     <div
-      className="size-12 rounded-full bg-white flex items-center justify-center cursor-pointer"
+      className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-white duration-200 hover:scale-90"
       onClick={() => onFavoriteChange && onFavoriteChange(!isFavorite)}
     >
       <div className="relative size-6">
         <GoHeartFill
-          className={`no-navigate absolute left-0 top-0 z-10 h-full w-full duration-200 ${isFavorite ? "scale-100 opacity-100" : "scale-0 opacity-0"} transition-all text-[#e41b23]`}
+          className={`absolute left-0 top-0 z-10 h-full w-full duration-200 ${isFavorite ? "scale-100 opacity-100" : "scale-0 opacity-0"} text-[#e41b23] transition-all`}
           cursor={"pointer"}
           size={24}
         />
         <GoHeart
-          className={`no-navigate absolute left-0 text-black top-0 z-10 h-full w-full duration-200 ${isFavorite ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
+          className={`absolute left-0 top-0 z-10 h-full w-full text-black duration-200 ${isFavorite ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
           cursor={"pointer"}
           size={24}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HeartIcon;
+export default HeartIcon

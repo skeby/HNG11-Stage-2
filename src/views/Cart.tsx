@@ -1,19 +1,19 @@
-import { Button, ConfigProvider, Table, TableProps, Tooltip } from "antd";
-import { Product } from "../types";
-import { useAppDispatch, useAppSelector } from "../state/store";
-import { GoArrowLeft, GoArrowRight, GoXCircle } from "react-icons/go";
-import { Link } from "react-router-dom";
-import { setCart } from "../state/slices/appSlice";
-import { FiMinus, FiPlus } from "react-icons/fi";
+import { Button, ConfigProvider, Table, TableProps, Tooltip } from "antd"
+import { Product } from "../types"
+import { useAppDispatch, useAppSelector } from "../state/store"
+import { GoArrowLeft, GoArrowRight, GoXCircle } from "react-icons/go"
+import { Link } from "react-router-dom"
+import { setCart } from "../state/slices/appSlice"
+import { FiMinus, FiPlus } from "react-icons/fi"
 
 const Cart = () => {
-  const { cart } = useAppSelector((state) => state.app);
-  const dispatch = useAppDispatch();
+  const { cart } = useAppSelector((state) => state.app)
+  const dispatch = useAppDispatch()
   const subTotal = cart.reduce(
     (acc, item) => acc + item.price * (item?.quantity ?? 1),
     0
-  );
-  const shippingFee = subTotal * 0.18;
+  )
+  const shippingFee = subTotal * 0.18
   const cardTotals = [
     {
       title: "Sub-total",
@@ -31,8 +31,8 @@ const Cart = () => {
       title: "Tax",
       value: 0,
     },
-  ];
-  const grandTotal = cardTotals.reduce((acc, item) => acc + item.value, 0);
+  ]
+  const grandTotal = cardTotals.reduce((acc, item) => acc + item.value, 0)
   const tableColumns: TableProps<Product>["columns"] = [
     {
       title: "PRODUCTS",
@@ -74,9 +74,9 @@ const Cart = () => {
       key: "quantity",
       width: 20,
       render: (value, record) => (
-        <div className="w-[148px] h-12 py-3 px-5 rounded-[3px] border border-[#E4E7E9] flex items-center justify-between">
+        <div className="flex h-12 w-[148px] items-center justify-between rounded-[3px] border border-[#E4E7E9] px-5 py-3">
           <div
-            className={`p-1 ${value > 1 ? "hover:bg-[#E4E7E9] cursor-pointer" : ""} transition-all duration-300 rounded-sm`}
+            className={`p-1 ${value > 1 ? "cursor-pointer hover:bg-[#E4E7E9]" : ""} rounded-sm transition-all duration-300`}
             onClick={() => {
               if (value > 1) {
                 dispatch(
@@ -87,7 +87,7 @@ const Cart = () => {
                         : i
                     )
                   )
-                );
+                )
               }
             }}
           >
@@ -96,9 +96,9 @@ const Cart = () => {
               className={`flex-shrink-0 ${value > 1 ? "text-[#191C1F]" : "text-[#929FA5]"}`}
             />
           </div>
-          <p className="text-base txt-[#475156]">{value}</p>
+          <p className="txt-[#475156] text-base">{value}</p>
           <div
-            className="p-1 hover:bg-[#E4E7E9] transition-all duration-300 rounded-sm cursor-pointer"
+            className="cursor-pointer rounded-sm p-1 transition-all duration-300 hover:bg-[#E4E7E9]"
             onClick={() => {
               dispatch(
                 setCart(
@@ -106,7 +106,7 @@ const Cart = () => {
                     i.id === record.id ? { ...i, quantity: i.quantity + 1 } : i
                   )
                 )
-              );
+              )
             }}
           >
             <FiPlus size={16} className={`flex-shrink-0 text-[#191C1F]`} />
@@ -120,14 +120,14 @@ const Cart = () => {
       key: "price",
       width: 10,
       render: (value) => (
-        <span className="font-medium text-sm">₦{value.toLocaleString()}</span>
+        <span className="text-sm font-medium">₦{value.toLocaleString()}</span>
       ),
     },
-  ];
+  ]
   return (
-    <div className="flex lg:flex-row flex-col gap-6">
-      <div className="lg:w-[60%] rounded-[4px] border-[#E4E7E9] border overflow-hidden">
-        <div className="px-6 py-5 text-[#191C1F] font-medium text-lg">
+    <div className="flex flex-col gap-6 lg:flex-row">
+      <div className="overflow-hidden rounded-[4px] border border-[#E4E7E9] lg:w-[60%]">
+        <div className="px-6 py-5 text-lg font-medium text-[#191C1F]">
           Shopping Cart
         </div>
         <ConfigProvider
@@ -158,31 +158,31 @@ const Cart = () => {
             className="overflow-auto"
           />
         </ConfigProvider>
-        <div className="p-6 border-[#E4E7E9] border-t">
+        <div className="border-t border-[#E4E7E9] p-6">
           <Link to={"/"}>
             <Button
               icon={<GoArrowLeft size={20} />}
-              className="rounded-sm border-[#2DA5F3] !text-[#2DA5F3] font-bold text-sm h-12 w-[200px]"
+              className="h-12 w-[200px] rounded-sm border-[#2DA5F3] text-sm font-bold !text-[#2DA5F3]"
             >
               RETURN TO SHOP
             </Button>
           </Link>
         </div>
       </div>
-      <div className="lg:w-[40%] rounded-[4px] h-fit border-[#E4E7E9] border overflow-hidden">
+      <div className="h-fit overflow-hidden rounded-[4px] border border-[#E4E7E9] lg:w-[40%]">
         <div className="p-6 text-lg font-medium">Cart Totals</div>
-        <div className="px-6 flex flex-col gap-y-3">
+        <div className="flex flex-col gap-y-3 px-6">
           {cardTotals.map((total, i) => (
             <div key={i} className="flex items-center justify-between">
-              <p className="text-[#5F6C72] text-sm">{total.title}</p>
-              <p className="text-[#191C1F] font-medium">
+              <p className="text-sm text-[#5F6C72]">{total.title}</p>
+              <p className="font-medium text-[#191C1F]">
                 ₦{total.value.toLocaleString()}
               </p>
             </div>
           ))}
         </div>
-        <div className="border-b border-[#E4E7E9] my-4 mx-6"></div>
-        <div className="flex items-center justify-between mx-6 mb-6">
+        <div className="mx-6 my-4 border-b border-[#E4E7E9]"></div>
+        <div className="mx-6 mb-6 flex items-center justify-between">
           <p>Total</p>
           <p className="font-semibold">₦{grandTotal.toLocaleString()} NGN</p>
         </div>
@@ -192,7 +192,7 @@ const Cart = () => {
               <Button
                 iconPosition="end"
                 icon={<GoArrowRight size={20} />}
-                className="w-full h-14 uppercase font-bold text-white hover:!border-[#FF7F50] hover:!text-[#FF7F50] bg-[#FF7F50]"
+                className="h-14 w-full bg-[#FF7F50] font-bold uppercase text-white hover:!border-[#FF7F50] hover:!text-[#FF7F50]"
               >
                 Proceed to Checkout
               </Button>
@@ -201,7 +201,7 @@ const Cart = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

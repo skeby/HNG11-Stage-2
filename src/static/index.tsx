@@ -1,30 +1,36 @@
-import { ProductCardProps } from "../components/ProductCard";
-import product1 from "../assets/images/product-1.png";
-import product2 from "../assets/images/product-2.png";
-import product3 from "../assets/images/product-3.png";
-import product5 from "../assets/images/product-5.png";
-import product6 from "../assets/images/product-6.png";
-import product7 from "../assets/images/product-7.png";
-import product8 from "../assets/images/product-8.png";
-import product9 from "../assets/images/product-9.png";
-import product10 from "../assets/images/product-10.png";
-import product11 from "../assets/images/product-11.png";
-import product12 from "../assets/images/product-12.png";
-import product13 from "../assets/images/product-13.png";
-import { Stars } from "../types";
-import { BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
-import HomeIcon from "../assets/icons/home.svg?react";
+import { ProductCardProps } from "../components/ProductCard"
+import product1 from "../assets/images/product-1.png"
+import product2 from "../assets/images/product-2.png"
+import product3 from "../assets/images/product-3.png"
+import product5 from "../assets/images/product-5.png"
+import product6 from "../assets/images/product-6.png"
+import product7 from "../assets/images/product-7.png"
+import product8 from "../assets/images/product-8.png"
+import product9 from "../assets/images/product-9.png"
+import product10 from "../assets/images/product-10.png"
+import product11 from "../assets/images/product-11.png"
+import product12 from "../assets/images/product-12.png"
+import product13 from "../assets/images/product-13.png"
+import { Stars } from "../types"
+import { BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb"
+import HomeIcon from "../assets/icons/home.svg?react"
+import AmazonIcon from "../assets/icons/amazon.svg?react"
+import CardIcon from "../assets/icons/card.svg?react"
+import CashIcon from "../assets/icons/cash.svg?react"
+import PaypalIcon from "../assets/icons/paypal.svg?react"
+import VenmoIcon from "../assets/icons/venmo.svg?react"
+import { IoLogoApple, IoLogoGooglePlaystore } from "react-icons/io5"
 
 export const sampleProducts: {
-  imageSrc: string;
-  stars: Stars;
-  ratings: number;
-  price: number;
-  title: string;
+  imageSrc: string
+  stars: Stars
+  ratings: number
+  price: number
+  title: string
   tags: {
-    title: string;
-    color: string;
-  }[];
+    title: string
+    color: string
+  }[]
 }[] = [
   {
     imageSrc: product1,
@@ -122,7 +128,87 @@ export const sampleProducts: {
     title: "Brown designer bag",
     tags: [],
   },
-];
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+  {
+    imageSrc: product13,
+    stars: 5,
+    ratings: 10,
+    price: 7990,
+    title: "Brown designer bag",
+    tags: [],
+  },
+]
 
 export const products: ProductCardProps[] = sampleProducts.map(
   (product, i) => ({
@@ -131,7 +217,7 @@ export const products: ProductCardProps[] = sampleProducts.map(
     quantity: 1,
     stars: product.stars,
   })
-);
+)
 
 export const breadCrumbItems: BreadcrumbItemType[] = [
   {
@@ -151,6 +237,93 @@ export const breadCrumbItems: BreadcrumbItemType[] = [
     path: "/checkout",
     title: "Checkout",
   },
-];
+]
 
-export const cartTableHeaders = ["Products", "Price", "Quantity", "Sub-Total"];
+export const cartTableHeaders = ["Products", "Price", "Quantity", "Sub-Total"]
+
+export const paymentOptions = [
+  {
+    icon: <CashIcon />,
+    title: "Cash on Delivery",
+  },
+  {
+    icon: <VenmoIcon />,
+    title: "Venmo",
+  },
+  {
+    icon: <PaypalIcon />,
+    title: "Paypal",
+  },
+  {
+    icon: <AmazonIcon />,
+    title: "Amazon Pay",
+  },
+  {
+    icon: <CardIcon />,
+    title: "Debit/Credit Card",
+  },
+]
+
+export const footerSections = [
+  {
+    header: "Product",
+    links: [
+      {
+        title: "Dresses",
+        path: "/",
+      },
+      {
+        title: "Handbag",
+        path: "/",
+      },
+      {
+        title: "Skincare",
+        path: "/",
+      },
+      {
+        title: "Lingerie",
+        path: "/",
+      },
+      {
+        title: "Scarves",
+        path: "/",
+      },
+    ],
+  },
+  {
+    header: "Company",
+    links: [
+      {
+        title: "Company",
+        path: "/",
+      },
+      {
+        title: "Company",
+        path: "/",
+      },
+      {
+        title: "Company",
+        path: "/",
+      },
+      {
+        title: "Company",
+        path: "/",
+      },
+      {
+        title: "Company",
+        path: "/",
+      },
+    ],
+  },
+]
+
+export const footerAppStores = [
+  {
+    name: "Google Play",
+    icon: <IoLogoGooglePlaystore size={32} />,
+  },
+  {
+    name: "App Store",
+    icon: <IoLogoApple size={32} />,
+  },
+]

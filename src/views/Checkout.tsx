@@ -1,27 +1,26 @@
-import { Button, Checkbox, Form, message, Radio } from "antd";
-import { useAppDispatch, useAppSelector } from "../state/store";
-import { GoArrowRight } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
-import Input from "../components/Input";
-import Select from "../components/Select";
-import AmazonIcon from "../assets/icons/amazon.svg?react";
-import CardIcon from "../assets/icons/card.svg?react";
-import CashIcon from "../assets/icons/cash.svg?react";
-import PaypalIcon from "../assets/icons/paypal.svg?react";
-import VenmoIcon from "../assets/icons/venmo.svg?react";
-import TextArea from "antd/es/input/TextArea";
-import { setCart } from "../state/slices/appSlice";
+import { Button, Checkbox, Form, Radio } from "antd"
+import { useAppDispatch, useAppSelector } from "../state/store"
+import { GoArrowRight } from "react-icons/go"
+import { Link } from "react-router-dom"
+import Input from "../components/Input"
+import Select from "../components/Select"
+import TextArea from "antd/es/input/TextArea"
+import { setCart } from "../state/slices/appSlice"
+import { paymentOptions } from "../static"
+import { useState } from "react"
+import { Product } from "../types"
+import CheckCircleIcon from "../assets/icons/check-circle.svg?react"
 
 const Checkout = () => {
-  const { cart } = useAppSelector((state) => state.app);
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const subTotal = cart.reduce(
-    (acc, item) => acc + item.price * (item?.quantity ?? 1),
-    0
-  );
-  const shippingFee = subTotal * 0.18;
-  const cardTotals = [
+  const { cart } = useAppSelector((state) => state.app)
+  const [showOrder, setShowOrder] = useState(false)
+  const [placedOrder, setPlacedOrder] = useState<Product[]>([])
+  const dispatch = useAppDispatch()
+  const subTotal = (
+    cart.length === 0 && placedOrder.length !== 0 ? placedOrder : cart
+  ).reduce((acc, item) => acc + item.price * (item?.quantity ?? 1), 0)
+  const shippingFee = subTotal * 0.18
+  const cartTotals = [
     {
       title: "Sub-total",
       value: subTotal,
@@ -38,39 +37,59 @@ const Checkout = () => {
       title: "Tax",
       value: 0,
     },
-  ];
-  const grandTotal = cardTotals.reduce((acc, item) => acc + item.value, 0);
+  ]
+  const grandTotal = cartTotals.reduce((acc, item) => acc + item.value, 0)
 
-  const paymentOptions = [
-    {
-      icon: <CashIcon />,
-      title: "Cash on Delivery",
-    },
-    {
-      icon: <VenmoIcon />,
-      title: "Venmo",
-    },
-    {
-      icon: <PaypalIcon />,
-      title: "Paypal",
-    },
-    {
-      icon: <AmazonIcon />,
-      title: "Amazon Pay",
-    },
-    {
-      icon: <CardIcon />,
-      title: "Debit/Credit Card",
-    },
-  ];
-  return (
-    <div className="flex lg:flex-row flex-col gap-6">
+  const OrderSummary = ({ orders }: { orders: Product[] }) => (
+    <>
+      <div className="p-6 text-lg font-medium">Order Summary</div>
+      <div className="mb-6 flex flex-col gap-y-4 px-6">
+        {orders.map((item) => (
+          <div key={item.id} className="flex h-16 items-center gap-x-4">
+            <img
+              src={item.imageSrc}
+              className="size-16 rounded-sm object-cover"
+            />
+            <div>
+              <p className="mb-[6px] text-sm text-[#191C1F]">
+                {item.title.slice(0, 30)}...
+              </p>
+              <p className="text-sm">
+                <span className="text-[#5F6C72]">{item.quantity} x </span>
+                <span className="text-[#2DA5F3]">
+                  ₦{item.price.toLocaleString()}
+                </span>
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-y-3 px-6">
+        {cartTotals.map((total, i) => (
+          <div key={i} className="flex items-center justify-between">
+            <p className="text-sm text-[#5F6C72]">{total.title}</p>
+            <p className="font-medium text-[#191C1F]">
+              ₦{total.value.toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="mx-6 my-4 border-b border-[#E4E7E9]"></div>
+      <div className="mx-6 mb-6 flex items-center justify-between">
+        <p>Total</p>
+        <p className="font-semibold">₦{grandTotal.toLocaleString()} NGN</p>
+      </div>
+    </>
+  )
+
+  const OrderPreviewSection = (
+    <div className="flex flex-col gap-6 lg:flex-row">
       <Form className="lg:w-[60%]" layout="vertical" id="checkout-form">
-        <p className="mb-6 font-medium text-lg">Billing Information</p>
+        <p className="mb-6 text-lg font-medium">Billing Information</p>
         <div className="flex flex-col gap-y-10">
           <div className="flex flex-col gap-4 text-sm">
-            <div className="flex sm:flex-row flex-col gap-4">
-              <div className="w-full sm:flex-row flex-col flex items-end gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="flex w-full flex-col items-end gap-4 sm:flex-row">
                 <Form.Item label="User name" className="w-full">
                   <Input placeholder="First name" />
                 </Form.Item>
@@ -94,7 +113,7 @@ const Checkout = () => {
             <Form.Item label="Address">
               <Input />
             </Form.Item>
-            <div className="flex sm:flex-row flex-col gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <Form.Item label="Country" className="w-full">
                 <Select placeholder="Select..." />
               </Form.Item>
@@ -108,7 +127,7 @@ const Checkout = () => {
                 <Select placeholder="Select..." />
               </Form.Item>
             </div>
-            <div className="flex gap-4 sm:flex-row flex-col">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <Form.Item label="Email" className="w-full">
                 <Input />
               </Form.Item>
@@ -120,42 +139,41 @@ const Checkout = () => {
               label="Ship into different address"
               layout="horizontal"
               labelAlign="left"
-              className="w-full"
             >
               <Checkbox />
             </Form.Item>
           </div>
-          <div className="border-[#E4E7E9] border rounded flex flex-col gap-y-5">
+          <div className="flex flex-col gap-y-5 rounded border border-[#E4E7E9]">
             <p className="px-8 pt-5 text-lg font-medium">Payment Option</p>
             <div className="border-y border-[#E4E7E9] p-6">
-              <Radio.Group className="flex sm:flex-row gap-[3px] flex-col w-full">
+              <Radio.Group className="flex w-full flex-col sm:flex-row">
                 {paymentOptions.map((option, i) => (
                   <Form.Item
                     key={i}
                     label={
-                      <div className="w-full justify-center flex flex-col items-center gap-y-2">
+                      <div className="flex w-full flex-col items-center justify-center gap-y-2 text-center">
                         {option.icon}
-                        <p className="font-medium text-sm">{option.title}</p>
+                        <p className="text-sm font-medium">{option.title}</p>
                       </div>
                     }
-                    rootClassName={`w-full flex items-center justify-center ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:p-0 border-[#E4E7E9]" : "border-none"}`}
+                    rootClassName={`w-full flex items-center justify-center sm:px-2 ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
                   >
                     <Radio
                       value={option.title}
-                      className="flex items-center w-auto justify-center"
+                      className="flex w-auto items-center justify-center"
                     />
                   </Form.Item>
                 ))}
               </Radio.Group>
             </div>
-            <div className="pt-3 flex flex-col gap-y-4 p-8">
+            <div className="flex flex-col gap-y-4 p-8 pt-3">
               <Form.Item label="Name on Card">
                 <Input />
               </Form.Item>
               <Form.Item label="Card Number">
                 <Input type="number" />
               </Form.Item>
-              <div className="flex min-[500px]:flex-row flex-col gap-4">
+              <div className="flex flex-col gap-4 min-[500px]:flex-row">
                 <Form.Item label="Expiry Date" className="w-full">
                   <Input placeholder="DD/YY" />
                 </Form.Item>
@@ -186,57 +204,19 @@ const Checkout = () => {
           </div>
         </div>
       </Form>
-      <div className="lg:w-[40%] rounded-[4px] h-fit border-[#E4E7E9] border overflow-hidden">
-        <div className="p-6 text-lg font-medium">Order Summary</div>
-        <div className="flex flex-col gap-y-4 px-6 mb-6">
-          {cart.map((item) => (
-            <div key={item.id} className="h-16 flex items-center gap-x-4">
-              <img
-                src={item.imageSrc}
-                className="size-16 rounded-sm object-cover"
-              />
-              <div>
-                <p className="mb-[6px] text-[#191C1F] text-sm">
-                  {item.title.slice(0, 30)}...
-                </p>
-                <p className="text-sm">
-                  <span className="text-[#5F6C72]">{item.quantity} x </span>
-                  <span className="text-[#2DA5F3]">
-                    ₦{item.price.toLocaleString()}
-                  </span>
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="px-6 flex flex-col gap-y-3">
-          {cardTotals.map((total, i) => (
-            <div key={i} className="flex items-center justify-between">
-              <p className="text-[#5F6C72] text-sm">{total.title}</p>
-              <p className="text-[#191C1F] font-medium">
-                ₦{total.value.toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="border-b border-[#E4E7E9] my-4 mx-6"></div>
-        <div className="flex items-center justify-between mx-6 mb-6">
-          <p>Total</p>
-          <p className="font-semibold">₦{grandTotal.toLocaleString()} NGN</p>
-        </div>
+      <div className="h-fit overflow-hidden rounded-[4px] border border-[#E4E7E9] lg:w-[40%]">
+        <OrderSummary orders={cart} />
         {subTotal > 0 && (
           <div className="px-6 pb-6">
             <Button
               onClick={() => {
-                message.success("Order placed successfully", 3).then(() => {
-                  navigate("/");
-                  dispatch(setCart([]));
-                });
+                setPlacedOrder(cart)
+                dispatch(setCart([]))
               }}
               form="checkout-form"
               iconPosition="end"
               icon={<GoArrowRight size={20} />}
-              className="w-full h-14 uppercase font-bold text-white hover:!border-[#FF7F50] hover:!text-[#FF7F50] bg-[#FF7F50]"
+              className="h-14 w-full bg-[#FF7F50] font-bold uppercase text-white hover:!border-[#FF7F50] hover:!text-[#FF7F50]"
             >
               Place order
             </Button>
@@ -244,7 +224,53 @@ const Checkout = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
 
-export default Checkout;
+  const OrderSuccessfulSection = (
+    <div className="flex h-full flex-grow flex-col items-center justify-center text-center">
+      <CheckCircleIcon className="mb-6" />
+      <p className="mb-3 text-2xl font-semibold text-[#191C1F]">
+        Your order is successfully placed
+      </p>
+      <p className="mb-8 max-w-[424px] text-sm text-[#5F6C72]">
+        Thanks for your time!!!
+      </p>
+      <div className="flex w-full flex-col items-center gap-3 min-[500px]:w-auto min-[500px]:flex-row">
+        <Link to="/" className="w-full min-[500px]:w-auto">
+          <Button className="h-12 !w-full rounded border-2 border-[#FF7F50] px-6 text-sm font-bold uppercase text-[#FF7F50] hover:!bg-[#FF7F50] hover:!text-white">
+            Go to Home
+          </Button>
+        </Link>
+        <Button
+          onClick={() => setShowOrder(true)}
+          iconPosition="end"
+          icon={<GoArrowRight size={20} />}
+          className="h-12 w-full rounded bg-[#FF7F50] px-6 text-sm font-bold uppercase text-white hover:!border-2 hover:!text-[#FF7F50] min-[500px]:w-[160px]"
+        >
+          View Order
+        </Button>
+      </div>
+    </div>
+  )
+
+  const ViewOrderSection = (
+    <div className="flex h-full flex-col items-center justify-center">
+      <div className="overflow-hidden rounded-[4px] border border-[#E4E7E9]">
+        <OrderSummary orders={placedOrder} />
+        <Link to="/" className="mx-6 mb-6 flex">
+          <Button className="font-bolds h-12 w-full rounded border-2 border-[#FF7F50] px-6 text-sm font-bold uppercase text-[#FF7F50] hover:!bg-[#FF7F50] hover:!text-white">
+            Go to Home
+          </Button>
+        </Link>
+      </div>
+    </div>
+  )
+
+  return showOrder
+    ? ViewOrderSection
+    : placedOrder && placedOrder.length > 0
+      ? OrderSuccessfulSection
+      : OrderPreviewSection
+}
+
+export default Checkout

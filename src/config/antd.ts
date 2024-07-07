@@ -1,4 +1,4 @@
-import { ThemeConfig } from "antd";
+import { ThemeConfig } from "antd"
 
 export const themeConfig: ThemeConfig = {
   token: {
@@ -27,5 +27,8 @@ export const themeConfig: ThemeConfig = {
     Checkbox: {
       colorPrimary: "#BF5700",
     },
+    Button: {
+      defaultHoverBorderColor: "#FF7F50",
+    },
   },
-};
+}
