@@ -2,7 +2,6 @@ import { Button, ConfigProvider, Table, TableProps, Tooltip } from "antd";
 import { Product } from "../types";
 import { useAppDispatch, useAppSelector } from "../state/store";
 import { GoArrowLeft, GoArrowRight, GoXCircle } from "react-icons/go";
-import Image from "../components/Image";
 import { Link } from "react-router-dom";
 import { setCart } from "../state/slices/appSlice";
 import { FiMinus, FiPlus } from "react-icons/fi";
@@ -37,7 +36,7 @@ const Cart = () => {
   const tableColumns: TableProps<Product>["columns"] = [
     {
       title: "PRODUCTS",
-      width: 200,
+      width: 25,
       render: (_value, record) => (
         <div className="flex items-center gap-x-3">
           <GoXCircle
@@ -48,7 +47,7 @@ const Cart = () => {
             cursor={"pointer"}
             className="flex-shrink-0 text-[#EE5858]"
           />
-          <Image
+          <img
             width={72}
             height={72}
             src={record.imageSrc}
@@ -64,7 +63,7 @@ const Cart = () => {
       title: "PRICE",
       dataIndex: "price",
       key: "price",
-      width: 80,
+      width: 20,
       render: (value) => (
         <span className="text-sm">₦{value.toLocaleString()}</span>
       ),
@@ -73,7 +72,7 @@ const Cart = () => {
       title: "QUANTITY",
       dataIndex: "quantity",
       key: "quantity",
-      width: 50,
+      width: 20,
       render: (value, record) => (
         <div className="w-[148px] h-12 py-3 px-5 rounded-[3px] border border-[#E4E7E9] flex items-center justify-between">
           <div
@@ -119,7 +118,7 @@ const Cart = () => {
       title: "SUB-TOTAL",
       dataIndex: "price",
       key: "price",
-      width: 80,
+      width: 10,
       render: (value) => (
         <span className="font-medium text-sm">₦{value.toLocaleString()}</span>
       ),
@@ -132,6 +131,7 @@ const Cart = () => {
           Shopping Cart
         </div>
         <ConfigProvider
+          empty={{}}
           theme={{
             token: {
               fontFamily: "Public sans, sans-serif",
@@ -144,6 +144,7 @@ const Cart = () => {
                 fontSize: 12,
                 borderColor: "transparent",
               },
+              Empty: {},
             },
           }}
         >
@@ -151,9 +152,12 @@ const Cart = () => {
             // rowClassName={"!py-4"}
             columns={tableColumns}
             rowKey={"id"}
-            // bordered
+            // tableLayout="fixed"
             dataSource={cart}
             pagination={false}
+            virtual
+            scroll={{ x: 1500, y: 500 }}
+            className="overflow-auto"
           />
         </ConfigProvider>
         <div className="p-6 border-[#E4E7E9] border-t">

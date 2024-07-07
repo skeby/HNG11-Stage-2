@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Checkout from "./pages/Checkout";
 import ProductList from "./views/ProductList";
 import Cart from "./views/Cart";
+import Checkout from "./views/Checkout";
+import Favorites from "./views/Favorites";
 
 export const router = createBrowserRouter([
   {
@@ -13,14 +14,11 @@ export const router = createBrowserRouter([
       { index: true, element: <ProductList /> },
       { path: "checkout", element: <Checkout /> },
       { path: "cart", element: <Cart /> },
+      { path: "favorites", element: <Favorites /> },
     ],
   },
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/checkout",
-    element: <Checkout />,
   },
 ]);

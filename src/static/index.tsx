@@ -4,8 +4,19 @@ import product2 from "../assets/images/product-2.png";
 import product3 from "../assets/images/product-2.png";
 import { Stars } from "../types";
 import { BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
+import HomeIcon from "../assets/icons/home.svg?react";
 
-export const sampleProducts = [
+export const sampleProducts: {
+  imageSrc: string;
+  stars: Stars;
+  ratings: number;
+  price: number;
+  title: string;
+  tags: {
+    title: string;
+    color: string;
+  }[];
+}[] = [
   {
     imageSrc: product1,
     stars: 4,
@@ -77,26 +88,27 @@ export const products: ProductCardProps[] = sampleProducts.map(
     ...product,
     id: i + 1,
     quantity: 1,
-    stars: product.stars as Stars,
+    stars: product.stars,
   })
 );
 
 export const breadCrumbItems: BreadcrumbItemType[] = [
   {
     path: "/",
-    title: "Home",
-    menu: {
-      items: [
-        {
-          path: "/cart",
-          title: "Cart",
-        },
-        {
-          path: "/checkout",
-          title: "Checkout",
-        },
-      ],
-    },
+    title: (
+      <div className="flex items-center gap-x-2">
+        <HomeIcon className="!size-5" />
+        <span>Home</span>
+      </div>
+    ),
+  },
+  {
+    path: "/cart",
+    title: "Shopping Cart",
+  },
+  {
+    path: "/checkout",
+    title: "Checkout",
   },
 ];
 
