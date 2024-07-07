@@ -68,13 +68,13 @@ const Checkout = () => {
       <Form className="lg:w-[60%]" layout="vertical" id="checkout-form">
         <p className="mb-6 font-medium text-lg">Billing Information</p>
         <div className="flex flex-col gap-y-10">
-          <div className="flex flex-col gap-y-4 text-sm">
-            <div className="flex gap-x-4">
-              <div className="w-full flex items-end gap-x-4">
-                <Form.Item label="User name">
+          <div className="flex flex-col gap-4 text-sm">
+            <div className="flex sm:flex-row flex-col gap-4">
+              <div className="w-full sm:flex-row flex-col flex items-end gap-4">
+                <Form.Item label="User name" className="w-full">
                   <Input placeholder="First name" />
                 </Form.Item>
-                <Form.Item>
+                <Form.Item className="w-full">
                   <Input placeholder="Last name" />
                 </Form.Item>
               </div>
@@ -94,21 +94,21 @@ const Checkout = () => {
             <Form.Item label="Address">
               <Input />
             </Form.Item>
-            <div className="flex gap-x-4">
+            <div className="flex sm:flex-row flex-col gap-4">
               <Form.Item label="Country" className="w-full">
                 <Select placeholder="Select..." />
               </Form.Item>
-              <Form.Item label="Country" className="w-full">
+              <Form.Item label="Region/State" className="w-full">
                 <Select placeholder="Select..." />
               </Form.Item>
-              <Form.Item label="Country" className="w-full">
+              <Form.Item label="City" className="w-full">
                 <Select placeholder="Select..." />
               </Form.Item>
-              <Form.Item label="Country" className="w-full">
+              <Form.Item label="Zip Code" className="w-full">
                 <Select placeholder="Select..." />
               </Form.Item>
             </div>
-            <div className="flex gap-x-4">
+            <div className="flex gap-4 sm:flex-row flex-col">
               <Form.Item label="Email" className="w-full">
                 <Input />
               </Form.Item>
@@ -120,26 +120,25 @@ const Checkout = () => {
               label="Ship into different address"
               layout="horizontal"
               labelAlign="left"
-              className="w-auto"
+              className="w-full"
             >
               <Checkbox />
             </Form.Item>
           </div>
           <div className="border-[#E4E7E9] border rounded flex flex-col gap-y-5">
             <p className="px-8 pt-5 text-lg font-medium">Payment Option</p>
-            <div className="border-y border-[#E4E7E9] p-6 flex gap-x-[3px] justify-between">
-              <Radio.Group className="flex w-full">
+            <div className="border-y border-[#E4E7E9] p-6">
+              <Radio.Group className="flex sm:flex-row gap-[3px] flex-col w-full">
                 {paymentOptions.map((option, i) => (
                   <Form.Item
                     key={i}
-                    // labelAlign="right"
                     label={
                       <div className="w-full justify-center flex flex-col items-center gap-y-2">
                         {option.icon}
                         <p className="font-medium text-sm">{option.title}</p>
                       </div>
                     }
-                    rootClassName={`w-full flex items-center justify-center ${i !== 0 ? "border-l border-[#E4E7E9]" : "border-none"}`}
+                    rootClassName={`w-full flex items-center justify-center ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:p-0 border-[#E4E7E9]" : "border-none"}`}
                   >
                     <Radio
                       value={option.title}
@@ -156,7 +155,7 @@ const Checkout = () => {
               <Form.Item label="Card Number">
                 <Input type="number" />
               </Form.Item>
-              <div className="flex gap-x-4">
+              <div className="flex min-[500px]:flex-row flex-col gap-4">
                 <Form.Item label="Expiry Date" className="w-full">
                   <Input placeholder="DD/YY" />
                 </Form.Item>

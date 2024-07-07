@@ -5,8 +5,6 @@ interface Props extends ImageProps {}
 
 const Image = (props: Props) => {
   const { fallback, preview, className, placeholder, ...rest } = props;
-  // TODO: Include image tint
-  // TODO: Find a way to make sure fallback image is of the same size as image
   return (
     <AntdImage
       {...rest}

@@ -17,12 +17,10 @@ const ProductCard = (props: ProductCardProps) => {
   const [message, contextHolder] = useMessage();
   const { imageSrc, stars, ratings, price, title, tags } = props;
   const [previewVisible, setPreviewVisible] = useState(false);
-  // const [isHovered, setIsHovered] = useState(false);
   const dispatch = useAppDispatch();
   const { cart, favorites, isDataLoading } = useAppSelector(
     (state) => state.app
   );
-  // const maskRef = useRef<HTMLDivElement>(null);
 
   const shortenedTitle = `${title.slice(0, 10)}...`;
 
@@ -42,20 +40,14 @@ const ProductCard = (props: ProductCardProps) => {
   };
 
   return (
-    <div
-      className="border relative border-[#E4E7E9] hover:border-[#C9CFD2] cursor-pointer hover:shadow-xl transition-all duration-300 rounded-[3px] p-4 flex flex-col gap-y-6 h-full"
-      onMouseEnter={() => {
-        document
-          .querySelector(".ant-image-mask")
-          ?.dispatchEvent(new MouseEvent("mouseover"));
-      }}
-      onMouseLeave={() => {
-        document
-          .querySelector(".ant-image-mask")
-          ?.dispatchEvent(new MouseEvent("mouseout"));
-      }}
-    >
-      <Skeleton active loading={isDataLoading}>
+    <div className="border relative border-[#E4E7E9] hover:border-[#C9CFD2] cursor-pointer hover:shadow-xl transition-all duration-300 rounded-[3px] p-4 flex flex-col gap-y-6 h-full">
+      <Skeleton
+        paragraph={{
+          rows: 8,
+        }}
+        active
+        loading={isDataLoading}
+      >
         {contextHolder}
         <div className="absolute flex items-center gap-2 z-10">
           {tags?.map((tag, i) => (
@@ -68,19 +60,8 @@ const ProductCard = (props: ProductCardProps) => {
             </div>
           ))}
         </div>
-        {/* <AntdImage.PreviewGroup items={products.map((p) => p.imageSrc)}> */}
         <Image
           preview={{
-            // toolbarRender(originalNode, info) {
-            //   return (
-            //     <div className="flex flex-col gap-x-2">
-            //       <div className="p-2 rounded-xl">{title}</div>
-            //       {originalNode}
-            //     </div>
-            //   );
-            // },
-            // destroyOnClose: true,
-            // toolbarRender: () => null,
             visible: previewVisible,
             onVisibleChange(value) {
               if (!value) {
@@ -89,7 +70,6 @@ const ProductCard = (props: ProductCardProps) => {
             },
             destroyOnClose: true,
             maskClassName: "!cursor-default",
-            // mask
             mask: (
               <div className="flex absolute items-center gap-x-2 px-2">
                 <HeartIcon
@@ -134,7 +114,6 @@ const ProductCard = (props: ProductCardProps) => {
           alt={title}
           className="!h-[172px] !max-w-[100px]"
         />
-        {/* </AntdImage.PreviewGroup> */}
         <div className="flex flex-col gap-y-2">
           <div className="flex gap-x-1">
             <div className="flex items-center">

@@ -149,10 +149,8 @@ const Cart = () => {
           }}
         >
           <Table
-            // rowClassName={"!py-4"}
             columns={tableColumns}
             rowKey={"id"}
-            // tableLayout="fixed"
             dataSource={cart}
             pagination={false}
             virtual

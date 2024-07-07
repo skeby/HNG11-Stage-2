@@ -3,7 +3,6 @@ import { Product } from "../../types";
 import { products } from "../../static";
 
 export interface AppState {
-  // TODO: Change Cart type to Product[]
   displayedProducts: Product[];
   products: Product[];
   cart: Product[];

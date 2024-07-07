@@ -19,7 +19,6 @@ export const themeConfig: ThemeConfig = {
       borderRadius: 2,
       colorPrimary: "#BF5700",
       controlOutline: "#BF5700",
-      // hoverB: "#BF5700",
     },
     Radio: {
       colorText: "#BF5700",
