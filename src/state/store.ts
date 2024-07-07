@@ -9,6 +9,7 @@ export interface PersistedAppState extends AppState {}
 const appPersistConfig = {
   key: "app",
   storage: storage,
+  whitelist: ["favorites", "cart"],
 };
 
 export const store = configureStore({

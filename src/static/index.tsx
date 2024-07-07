@@ -32,7 +32,7 @@ export const sampleProducts: {
     ratings: 300,
     price: 178300,
     title: "Snake leather skin bag of different color",
-    tags: [{ title: "SALE", color: "#2DB224" }],
+    tags: [{ title: "HOT", color: "#EE5858" }],
   },
   {
     imageSrc: product2,
@@ -80,7 +80,7 @@ export const sampleProducts: {
     ratings: 393,
     price: 32902,
     title: "Red wooven bag",
-    tags: [{ title: "HOT", color: "#EE5858" }],
+    tags: [],
   },
   {
     imageSrc: product9,
@@ -88,7 +88,7 @@ export const sampleProducts: {
     ratings: 12,
     price: 40000,
     title: "Violet Handbag",
-    tags: [{ title: "SALE", color: "#2DB224" }],
+    tags: [],
   },
   {
     imageSrc: product10,
@@ -104,7 +104,7 @@ export const sampleProducts: {
     ratings: 93,
     price: 202380,
     title: "Black snake skin bag",
-    tags: [{ title: "SALE", color: "#2DB224" }],
+    tags: [],
   },
   {
     imageSrc: product12,
@@ -112,7 +112,7 @@ export const sampleProducts: {
     ratings: 64,
     price: 9300,
     title: "Pink leather bag",
-    tags: [{ title: "SALE", color: "#2DB224" }],
+    tags: [],
   },
   {
     imageSrc: product13,
@@ -120,7 +120,7 @@ export const sampleProducts: {
     ratings: 10,
     price: 7990,
     title: "Brown designer bag",
-    tags: [{ title: "SALE", color: "#2DB224" }],
+    tags: [],
   },
 ];
 
