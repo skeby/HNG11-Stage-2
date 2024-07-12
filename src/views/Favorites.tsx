@@ -1,24 +1,16 @@
-import { Empty } from "antd"
-import ProductCard from "../components/ProductCard"
+// import { useAppQuery } from "../hooks/useAppQuery"
 import { useAppSelector } from "../state/store"
-import { AnimatePresence } from "framer-motion"
+import ProductList from "./ProductList"
 
 const Favorites = () => {
+  // const {} = useAppQuery({})
   const { displayedProducts, searchQuery } = useAppSelector(
     (state) => state.app
   )
-  return displayedProducts.length > 0 ? (
-    <div className="grid w-full grid-cols-1 gap-4 bg-white sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <AnimatePresence>
-        {displayedProducts.map((f, i) => (
-          <ProductCard key={i} {...f} />
-        ))}
-      </AnimatePresence>
-    </div>
-  ) : (
-    <Empty
-      image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={
+  return (
+    <ProductList
+      products={displayedProducts}
+      emptyDescription={
         searchQuery !== "" ? (
           "No favorite product found"
         ) : (

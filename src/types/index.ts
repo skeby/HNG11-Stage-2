@@ -6,6 +6,7 @@ export interface Product {
   price: number
   title: string
   quantity: number
+  loading?: boolean
   tags?: ProductTag[]
 }
 

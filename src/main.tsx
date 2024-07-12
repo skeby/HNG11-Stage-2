@@ -7,6 +7,18 @@ import { persistor, store } from "./state/store.ts"
 import { PersistGate } from "redux-persist/integration/react"
 import { ConfigProvider, message } from "antd"
 import { themeConfig } from "./config/antd.ts"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+
+const queryClientOptions = {
+  defaultOptions: {
+    queries: {
+      // staleTime: 0,
+      refetchOnWindowFocus: false,
+    },
+  },
+}
+export const queryClient = new QueryClient(queryClientOptions)
 
 message.config({
   maxCount: 2,
@@ -16,9 +28,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
       <ConfigProvider theme={themeConfig}>
-        <PersistGate loading={null} persistor={persistor}>
-          <App />
-        </PersistGate>
+        <QueryClientProvider client={queryClient}>
+          <PersistGate loading={null} persistor={persistor}>
+            <App />
+            <ReactQueryDevtools />
+          </PersistGate>
+        </QueryClientProvider>
       </ConfigProvider>
     </Provider>
   </React.StrictMode>

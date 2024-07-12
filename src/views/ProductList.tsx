@@ -1,26 +1,29 @@
 import { AnimatePresence } from "framer-motion"
 import ProductCard from "../components/ProductCard"
-import { useAppSelector } from "../state/store"
-import { Empty } from "antd"
+import { Empty, Pagination } from "antd"
+import { Product } from "../types"
+import { ReactNode } from "react"
 
-const ProductList = () => {
-  const { displayedProducts, searchQuery } = useAppSelector(
-    (state) => state.app
-  )
-  return displayedProducts.length > 0 ? (
+interface Props {
+  products: Product[]
+  emptyDescription: ReactNode
+  loading?: boolean
+}
+
+const ProductList = ({ products, emptyDescription, loading }: Props) => {
+  return products.length > 0 ? (
     <div className="grid w-full grid-cols-1 gap-4 bg-white sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <AnimatePresence>
-        {displayedProducts.map((f, i) => (
-          <ProductCard key={i} {...f} />
+        {products.map((f, i) => (
+          <ProductCard loading={loading} key={i} {...f} />
         ))}
+        {products && products.length === 0 && <Pagination />}
       </AnimatePresence>
     </div>
   ) : (
     <Empty
       image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={
-        searchQuery !== "" ? "No product found" : "No product available"
-      }
+      description={emptyDescription}
     />
   )
 }

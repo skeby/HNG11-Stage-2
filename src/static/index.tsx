@@ -21,6 +21,15 @@ import PaypalIcon from "../assets/icons/paypal.svg?react"
 import VenmoIcon from "../assets/icons/venmo.svg?react"
 import { IoLogoApple, IoLogoGooglePlaystore } from "react-icons/io5"
 
+export const paths = {
+  products: {
+    get: "/products",
+  },
+  sales: {
+    add: "/sales",
+  },
+}
+
 export const sampleProducts: {
   imageSrc: string
   stars: Stars

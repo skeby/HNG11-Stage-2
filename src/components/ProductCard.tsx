@@ -16,7 +16,7 @@ export interface ProductCardProps extends Product {}
 
 const ProductCard = (props: ProductCardProps) => {
   const [message, contextHolder] = useMessage()
-  const { imageSrc, stars, ratings, price, title, tags } = props
+  const { imageSrc, stars, ratings, price, title, tags, loading } = props
   const [previewVisible, setPreviewVisible] = useState(false)
   const dispatch = useAppDispatch()
   const { cart, favorites, isDataLoading } = useAppSelector(
@@ -53,7 +53,7 @@ const ProductCard = (props: ProductCardProps) => {
           rows: 8,
         }}
         active
-        loading={isDataLoading}
+        loading={isDataLoading || loading}
       >
         {contextHolder}
         <div className="absolute z-10 flex items-center gap-2">
