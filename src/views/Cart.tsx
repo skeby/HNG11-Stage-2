@@ -49,14 +49,16 @@ const Cart = () => {
       render: (_value, record) => (
         <div className="flex items-center gap-x-3">
           <Tooltip title="Remove product from cart">
-            <GoXCircle
-              onClick={() =>
-                dispatch(setCart(cart.filter((i) => i.id !== record.id)))
-              }
-              size={24}
-              cursor={"pointer"}
-              className="flex-shrink-0 rounded-full text-[#EE5858] duration-300 hover:bg-[#EE5858] hover:text-white"
-            />
+            <>
+              <GoXCircle
+                onClick={() =>
+                  dispatch(setCart(cart.filter((i) => i.id !== record.id)))
+                }
+                size={24}
+                cursor={"pointer"}
+                className="flex-shrink-0 rounded-full text-[#EE5858] duration-300 hover:bg-[#EE5858] hover:text-white"
+              />
+            </>
           </Tooltip>
           <img
             width={72}
