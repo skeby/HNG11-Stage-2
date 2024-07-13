@@ -27,3 +27,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.ant-pagination-item-active,
+.ant-pagination-item-active:focus {
+  border: none !important;
+}
+.ant-pagination-item,
+.ant-pagination-item:hover {
+  background: none !important;
+}

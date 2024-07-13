@@ -3,6 +3,7 @@ import ProductCard from "../components/ProductCard"
 import { Empty, Pagination, PaginationProps } from "antd"
 import { Product } from "../types"
 import { ReactNode } from "react"
+import PaginationItem from "../components/PaginationItem"
 
 interface Props extends PaginationProps {
   products: Product[]
@@ -28,7 +29,20 @@ const ProductList = (props: Props) => {
           ))}
         </AnimatePresence>
       </div>
-      {newProducts && <Pagination {...paginationProps} />}
+      {newProducts && (
+        <Pagination
+          {...paginationProps}
+          itemRender={(page, type) => (
+            <PaginationItem
+              page={page}
+              type={type}
+              pageSize={paginationProps.pageSize ?? 10}
+              currentPage={paginationProps.current ?? 1}
+              total={paginationProps.total ?? 0}
+            />
+          )}
+        />
+      )}
     </div>
   ) : (
     !loading && (

@@ -91,6 +91,10 @@ const ProductCard = (props: ProductCardProps) => {
         >
           <Image
             rootClassName="static"
+            style={{
+              height: "100%",
+              objectFit: "cover",
+            }}
             preview={{
               visible: previewVisible,
               onVisibleChange(value) {
@@ -100,7 +104,6 @@ const ProductCard = (props: ProductCardProps) => {
               },
               destroyOnClose: true,
               maskClassName: "!transition-all !duration-500 !bg-black/10",
-              // maskAnimation: "all 5s linear",
               mask: (
                 <div className="absolute flex items-center gap-x-2 px-2">
                   <Tooltip
@@ -173,7 +176,8 @@ const ProductCard = (props: ProductCardProps) => {
                 : undefined
             }
             alt={name}
-            className="!h-[172px] !max-w-[100px]"
+            wrapperClassName="sm:h-[250px] max-h-[250px] sm:max-h-auto"
+            className="!max-w-[100px]"
           />
         </AntdImage.PreviewGroup>
         <div className="flex flex-col gap-y-2">
@@ -193,7 +197,7 @@ const ProductCard = (props: ProductCardProps) => {
             </div>
             <p className="text-xs text-[#5d6468]">({ratings})</p>
           </div>
-          <p className="h-10 overflow-hidden overflow-ellipsis text-sm">
+          <p className="max-h-10 overflow-hidden overflow-ellipsis text-sm">
             {name}
           </p>
           <p className="text-[#2DA5F3]">

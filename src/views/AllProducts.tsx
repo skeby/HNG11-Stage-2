@@ -28,8 +28,9 @@ const AllProducts = () => {
   return (
     <ProductList
       pageSize={size}
+      current={page}
       hideOnSinglePage={false}
-      showSizeChanger
+      // showSizeChanger
       total={data?.total ?? 0}
       onChange={(page, size) => {
         animateScroll.scrollToTop({
