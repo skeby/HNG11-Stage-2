@@ -12,16 +12,23 @@ interface Props extends PaginationProps {
 
 const ProductList = (props: Props) => {
   const { products, emptyDescription, loading, ...paginationProps } = props
+  const newProducts = products.map((p) => {
+    const extraInfo = p.description ? JSON.parse(p.description) : {}
+    return {
+      ...p,
+      ...extraInfo,
+    }
+  })
   return products.length > 0 ? (
-    <div className="flex flex-col items-center gap-y-8">
+    <div className="flex flex-col items-center gap-y-12">
       <div className="grid w-full grid-cols-1 justify-center gap-4 bg-white min-[500px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <AnimatePresence>
-          {products.map((p, i) => (
+          {newProducts.map((p, i) => (
             <ProductCard loading={loading} key={i} {...p} />
           ))}
         </AnimatePresence>
       </div>
-      {products && <Pagination {...paginationProps} />}
+      {newProducts && <Pagination {...paginationProps} />}
     </div>
   ) : (
     !loading && (

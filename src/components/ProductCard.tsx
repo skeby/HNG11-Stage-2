@@ -26,7 +26,7 @@ const ProductCard = (props: ProductCardProps) => {
     available_quantity,
     // quantity,
     name,
-    tags,
+    tags: tTags,
     loading,
   } = props
   const [previewVisible, setPreviewVisible] = useState(false)
@@ -35,6 +35,7 @@ const ProductCard = (props: ProductCardProps) => {
     (state) => state.app
   )
 
+  const tags = [...(tTags ?? [])]
   const shortenedName = `${name?.slice(0, 10)}...`
   const isItemAddedToCart = cart.some((p) => p.id === props.id)
   const isFavorite = favorites.some((f) => f.id === props.id)
