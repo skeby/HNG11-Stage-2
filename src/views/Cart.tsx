@@ -48,14 +48,16 @@ const Cart = () => {
       width: 25,
       render: (_value, record) => (
         <div className="flex items-center gap-x-3">
-          <GoXCircle
-            onClick={() =>
-              dispatch(setCart(cart.filter((i) => i.id !== record.id)))
-            }
-            size={24}
-            cursor={"pointer"}
-            className="flex-shrink-0 text-[#EE5858]"
-          />
+          <Tooltip title="Remove product from cart">
+            <GoXCircle
+              onClick={() =>
+                dispatch(setCart(cart.filter((i) => i.id !== record.id)))
+              }
+              size={24}
+              cursor={"pointer"}
+              className="flex-shrink-0 rounded-full text-[#EE5858] duration-300 hover:bg-[#EE5858] hover:text-white"
+            />
+          </Tooltip>
           <img
             width={72}
             height={72}
@@ -160,7 +162,6 @@ const Cart = () => {
           Shopping Cart
         </div>
         <ConfigProvider
-          empty={{}}
           theme={{
             token: {
               fontFamily: "Public sans, sans-serif",
@@ -173,7 +174,6 @@ const Cart = () => {
                 fontSize: 12,
                 borderColor: "transparent",
               },
-              Empty: {},
             },
           }}
         >
@@ -187,15 +187,30 @@ const Cart = () => {
             className="overflow-auto"
           />
         </ConfigProvider>
-        <div className="border-t border-[#E4E7E9] p-6">
+        <div className="flex items-center justify-between border-t border-[#E4E7E9] p-6">
           <Link to={"/"}>
             <Button
               icon={<GoArrowLeft size={20} />}
-              className="h-12 w-[200px] rounded-sm border-[#2DA5F3] text-sm font-bold !text-[#2DA5F3]"
+              className="h-12 w-[200px] rounded-sm border-[#2DA5F3] text-sm font-bold !text-[#2DA5F3] hover:!border-none hover:!bg-[#2DA5F3] hover:!text-white"
             >
               RETURN TO SHOP
             </Button>
           </Link>
+          {cart.length > 0 && (
+            <Button
+              onClick={() => dispatch(setCart([]))}
+              icon={
+                <GoXCircle
+                  size={24}
+                  cursor={"pointer"}
+                  className="flex-shrink-0"
+                />
+              }
+              className="h-12 w-[200px] rounded-sm border-[#EE5858] text-sm font-bold !text-[#EE5858] hover:!bg-[#EE5858] hover:!text-white"
+            >
+              CLEAR CART
+            </Button>
+          )}
         </div>
       </div>
       <div className="h-fit overflow-hidden rounded-[4px] border border-[#E4E7E9] lg:w-[40%]">

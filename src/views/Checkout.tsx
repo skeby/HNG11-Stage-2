@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, FormProps, Radio } from "antd"
+import { Button, Form, FormProps, Radio } from "antd"
 import { useAppDispatch, useAppSelector } from "../state/store"
 import { GoArrowRight } from "react-icons/go"
 import { Link } from "react-router-dom"
@@ -14,6 +14,7 @@ import { API_BASE_URL } from "../services/axiosClient"
 import { animateScroll } from "react-scroll"
 import { useAppMutation } from "../hooks/useAppMutation"
 import { ORGANIZATION_ID } from "../config/env"
+import { AnimatePresence, motion, MotionProps } from "framer-motion"
 
 const Checkout = () => {
   const {
@@ -64,13 +65,30 @@ const Checkout = () => {
   ]
   const grandTotal = cartTotals.reduce((acc, item) => acc + item.value, 0)
 
+  const animationProps: MotionProps = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.7, type: "tween" },
+  }
+
   const formInitialValues: CheckoutFormFields = {
     first_name: "",
     last_name: "",
+    company_name: "",
+    address: "",
+    country: "South Africa",
+    state: "Jo'burg",
+    city: "",
+    zip_code: "",
     email: "",
     phone: "",
-    address: "",
-    country_code: "+234",
+    name_on_card: "",
+    card_number: "",
+    expiry_date: "",
+    cvc: "",
+    order_notes: "",
+    country_code: "+27",
     mode_of_payment: "",
     description: "",
   }
@@ -87,7 +105,6 @@ const Checkout = () => {
       })),
       currency_code: "NGN",
       sales_status: "pending",
-      // customer_title: "Testing Customer"
       ...rest,
     }
     createSale(data)
@@ -137,6 +154,7 @@ const Checkout = () => {
 
   const OrderPreviewSection = (
     <Form
+      scrollToFirstError
       layout="vertical"
       className="flex flex-col gap-6 lg:flex-row"
       onFinish={onCheckout}
@@ -161,7 +179,7 @@ const Checkout = () => {
                 <Form.Item
                   name={"last_name"}
                   className="w-full"
-                  label="v"
+                  label="ㅤ"
                   rules={[{ required: true, message: validation.required }]}
                 >
                   <Input placeholder="Last name" />
@@ -169,6 +187,7 @@ const Checkout = () => {
               </div>
 
               <Form.Item
+                name={"company_name"}
                 className="w-full"
                 label={
                   <p>
@@ -180,21 +199,67 @@ const Checkout = () => {
                 <Input />
               </Form.Item>
             </div>
-            <Form.Item label="Address">
+            <Form.Item
+              name={"address"}
+              rules={[{ required: true, message: validation.required }]}
+              label="Address"
+            >
               <Input />
             </Form.Item>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Form.Item label="Country" className="w-full">
-                <Select placeholder="Select..." />
+              <Form.Item
+                name={"country"}
+                rules={[{ required: true, message: validation.required }]}
+                label="Country"
+                className="w-full"
+              >
+                <Select
+                  options={[
+                    { label: "Nigeria", value: "Nigeria" },
+                    { label: "South Africa", value: "South Africa" },
+                    { label: "United Kingdom", value: "United Kingdom" },
+                  ]}
+                  placeholder="Select..."
+                />
               </Form.Item>
-              <Form.Item label="Region/State" className="w-full">
-                <Select placeholder="Select..." />
+              <Form.Item
+                name={"state"}
+                rules={[{ required: true, message: validation.required }]}
+                label="Region/State"
+                className="w-full"
+              >
+                <Select
+                  options={[
+                    { label: "Jo'burg", value: "Jo'burg" },
+                    { label: "Kaduna", value: "Kaduna" },
+                    { label: "Lagos", value: "Lagos" },
+                    { label: "Kano", value: "Kano" },
+                  ]}
+                  placeholder="Select..."
+                />
               </Form.Item>
-              <Form.Item label="City" className="w-full">
-                <Select placeholder="Select..." />
+              <Form.Item
+                name={"city"}
+                rules={[{ required: true, message: validation.required }]}
+                label="City"
+                className="w-full"
+              >
+                <Select
+                  options={[
+                    { label: "Lekki", value: "Lekki" },
+                    { label: "Victoria Island", value: "Victoria Island" },
+                    { label: "Agege", value: "Agege" },
+                  ]}
+                  placeholder="Select..."
+                />
               </Form.Item>
-              <Form.Item label="Zip Code" className="w-full">
-                <Select placeholder="Select..." />
+              <Form.Item
+                name={"zip_code"}
+                rules={[{ required: true, message: validation.required }]}
+                label="Zip Code"
+                className="w-full"
+              >
+                <Input placeholder="Select..." />
               </Form.Item>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -222,6 +287,9 @@ const Checkout = () => {
                       <Select
                         className="!h-[34px]"
                         options={[
+                          { value: "+27", label: "+27" },
+                          { value: "+1", label: "+1" },
+                          { value: "+44", label: "+44" },
                           { value: "+234", label: "+234" },
                           { value: "+233", label: "+233" },
                         ]}
@@ -245,41 +313,29 @@ const Checkout = () => {
                 />
               </Form.Item>
             </div>
-            <Form.Item
-              label="Ship into different address"
-              layout="horizontal"
-              labelAlign="left"
-            >
-              <Checkbox />
-            </Form.Item>
           </div>
           <div className="flex flex-col gap-y-5 rounded border border-[#E4E7E9]">
             <p className="px-8 pt-5 text-lg font-medium">Payment Option</p>
             <div className="border-y border-[#E4E7E9] p-6">
-              {/* TODO: Fix this design */}
               <Form.Item
                 layout="vertical"
                 name={"mode_of_payment"}
+                className="text-center"
                 rules={[{ required: true, message: validation.required }]}
-                // label={
-                //   <div className="flex w-full flex-col items-center justify-center gap-y-2 text-center">
-                //     {option.icon}
-                //     <p className="text-sm font-medium">{option.title}</p>
-                //   </div>
-                // }
-                // rootClassName={`w-full flex items-center justify-center sm:px-2 ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
-                rootClassName={`w-full flex items-center justify-center sm:px-2 ${paymentOptions.length !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
+                rootClassName={`w-full`}
               >
-                <Radio.Group className="flex w-full flex-col sm:flex-row">
+                <Radio.Group className="mb-3 flex !h-auto !w-full flex-col gap-2 sm:flex-row">
                   {paymentOptions.map((option, i) => (
                     <Radio
+                      rootClassName={`m-0 after:hidden flex-col-reverse !flex !justify-center w-full !items-center gap-y-4 ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
                       key={i}
                       value={option.title}
-                      className="flex w-auto items-center justify-center"
                     >
                       <div className="flex w-full flex-col items-center justify-center gap-y-2 text-center">
                         {option.icon}
-                        <p className="text-sm font-medium">{option.title}</p>
+                        <p className="text-sm font-medium text-black">
+                          {option.title}
+                        </p>
                       </div>
                     </Radio>
                   ))}
@@ -287,17 +343,35 @@ const Checkout = () => {
               </Form.Item>
             </div>
             <div className="flex flex-col gap-y-4 p-8 pt-3">
-              <Form.Item label="Name on Card">
+              <Form.Item
+                name={"name_on_card"}
+                rules={[{ required: true, message: validation.required }]}
+                label="Name on Card"
+              >
                 <Input />
               </Form.Item>
-              <Form.Item label="Card Number">
+              <Form.Item
+                name={"card_number"}
+                rules={[{ required: true, message: validation.required }]}
+                label="Card Number"
+              >
                 <Input type="number" />
               </Form.Item>
               <div className="flex flex-col gap-4 min-[500px]:flex-row">
-                <Form.Item label="Expiry Date" className="w-full">
-                  <Input placeholder="DD/YY" />
+                <Form.Item
+                  name={"expiry_date"}
+                  rules={[{ required: true, message: validation.required }]}
+                  label="Expiry Date"
+                  className="w-full"
+                >
+                  <Input type="number" placeholder="DD/YY" />
                 </Form.Item>
-                <Form.Item label="CVC" className="w-full">
+                <Form.Item
+                  name={"cvc"}
+                  rules={[{ required: true, message: validation.required }]}
+                  label="CVC"
+                  className="w-full"
+                >
                   <Input type="number" />
                 </Form.Item>
               </div>
@@ -344,7 +418,10 @@ const Checkout = () => {
   )
 
   const OrderSuccessfulSection = (
-    <div className="flex h-full flex-grow flex-col items-center justify-center text-center">
+    <motion.div
+      {...animationProps}
+      className="flex h-full flex-grow flex-col items-center justify-center text-center"
+    >
       <CheckCircleIcon className="mb-6" />
       <p className="mb-3 text-2xl font-semibold text-[#191C1F]">
         Your order is successfully placed
@@ -370,11 +447,14 @@ const Checkout = () => {
           View Order
         </Button>
       </div>
-    </div>
+    </motion.div>
   )
 
   const ViewOrderSection = (
-    <div className="flex h-full flex-col items-center justify-center">
+    <motion.div
+      {...animationProps}
+      className="flex h-full flex-col items-center justify-center"
+    >
       <div className="overflow-hidden rounded-[4px] border border-[#E4E7E9]">
         <OrderSummary orders={placedOrder} />
         <Link to="/" className="mx-6 mb-6 flex">
@@ -383,14 +463,18 @@ const Checkout = () => {
           </Button>
         </Link>
       </div>
-    </div>
+    </motion.div>
   )
 
-  return showOrder
-    ? ViewOrderSection
-    : placedOrder && placedOrder.length > 0 && isSuccess
-      ? OrderSuccessfulSection
-      : OrderPreviewSection
+  return (
+    <AnimatePresence>
+      {showOrder
+        ? ViewOrderSection
+        : placedOrder && placedOrder.length > 0 && isSuccess
+          ? OrderSuccessfulSection
+          : OrderPreviewSection}
+    </AnimatePresence>
+  )
 }
 
 export default Checkout

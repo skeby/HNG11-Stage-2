@@ -2,7 +2,7 @@ import axios from "axios"
 import { message } from "antd"
 import { API_KEY, APP_ID, ORGANIZATION_ID } from "../config/env"
 
-console.log("windows_host", window.location.hostname)
+// console.log("windows_host", window.location.hostname)
 export const API_BASE_URL = "https://api.timbu.cloud"
 
 const client = axios.create({
@@ -23,7 +23,6 @@ client.interceptors.request.use(
       Appid: APP_ID,
       Apikey: API_KEY,
     }
-    console.log(`${config.method?.toUpperCase()} - ${config.url}`)
     return config
   },
   (error) => Promise.reject(error)
@@ -32,7 +31,6 @@ client.interceptors.request.use(
 // Intercept all responses
 client.interceptors.response.use(
   async (response) => {
-    console.log(`${response.status} - ${response.config.url}`)
     return response
   },
   (error) => {

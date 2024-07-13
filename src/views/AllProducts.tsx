@@ -16,6 +16,7 @@ const AllProducts = () => {
     params: {
       page,
       size,
+      reverse_sort: true,
       search_value: searchQuery,
     },
     enabled: true,
@@ -30,7 +31,6 @@ const AllProducts = () => {
       pageSize={size}
       current={page}
       hideOnSinglePage={false}
-      // showSizeChanger
       total={data?.total ?? 0}
       onChange={(page, size) => {
         animateScroll.scrollToTop({

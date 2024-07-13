@@ -12,7 +12,7 @@ import {
 export interface PersistedAppState extends AppState {}
 
 const migrations: MigrationManifest = {
-  // Example migration to clear state when version changes
+  // Migration to clear state when version changes
   2: () => {
     return {
       _persist: {

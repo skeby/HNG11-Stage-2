@@ -25,7 +25,6 @@ const ProductCard = (props: ProductCardProps) => {
     photos,
     current_price,
     available_quantity,
-    // quantity,
     name,
     tags: tTags,
     loading,
@@ -178,7 +177,11 @@ const ProductCard = (props: ProductCardProps) => {
                   )}
                   {photos.length > 0 && (
                     <Tooltip
-                      title={photos.length > 1 ? "View images" : "View image"}
+                      title={
+                        photos.length > 1
+                          ? "View product images"
+                          : "View product image"
+                      }
                     >
                       <div
                         className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-[#FF7F50] duration-200 hover:scale-90"

@@ -8,11 +8,18 @@ import PaginationItem from "../components/PaginationItem"
 interface Props extends PaginationProps {
   products: Product[]
   emptyDescription: ReactNode
+  showPagination?: boolean
   loading?: boolean
 }
 
 const ProductList = (props: Props) => {
-  const { products, emptyDescription, loading, ...paginationProps } = props
+  const {
+    products,
+    emptyDescription,
+    loading,
+    showPagination = true,
+    ...paginationProps
+  } = props
   const newProducts = products.map((p) => {
     const extraInfo = p.description ? JSON.parse(p.description) : {}
     return {
@@ -30,7 +37,7 @@ const ProductList = (props: Props) => {
           ))}
         </AnimatePresence>
       </div>
-      {newProducts && (
+      {newProducts && showPagination && (
         <Pagination
           {...paginationProps}
           itemRender={(page, type) => (

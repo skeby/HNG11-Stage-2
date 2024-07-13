@@ -13,7 +13,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 const queryClientOptions = {
   defaultOptions: {
     queries: {
-      // staleTime: 0,
       refetchOnWindowFocus: true,
     },
   },

@@ -33,9 +33,19 @@ export type Stars = 0 | 1 | 2 | 3 | 4 | 5
 export interface CheckoutFormFields {
   first_name: string
   last_name: string
+  company_name?: string
+  address: string
+  country: string
+  state: string
+  city: string
+  zip_code: string
   email: string
   phone: string
-  address: string
+  name_on_card: string
+  card_number: string
+  expiry_date: string
+  cvc: string
+  order_notes?: string
   country_code: string
   mode_of_payment: string
   description: string
