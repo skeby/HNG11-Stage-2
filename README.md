@@ -1,30 +1,60 @@
-# React + TypeScript + Vite
+# Meraki Fashion Store
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a fictional store built as a requirement for [HNG Internship](https://hng.tech/internship) Stage 2 and Stage 3 tasks.
 
-Currently, two official plugins are available:
+## API Service
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project made use of [Timbu](https://timbu.cloud), an innovative solution for easily streamlining organizational operations and efficient management of administrative tasks.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Product List
+- Product Image Preview
+- Cart
+- Checkout
 
-- Configure the top-level `parserOptions` property like this:
+## Demo
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+[Click here](https://hng-11-stage-2.vercel.app/)
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+```bash
+VITE_APP_API_KEY=[YOUR_TIMBU_API_KEY]
+
+VITE_APP_APP_ID=[YOUR_TIMBU_APP_ID]
+
+VITE_APP_ORGANIZATION_ID=[YOUR_TIMBU_ORGANIZATION_ID]
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/skeby/hng11-Stage-2
+```
+
+Go to the project directory
+
+```bash
+  cd HNG11-Stage-2
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+## Authors
+
+- [@skeby](https://www.github.com/skeby)
