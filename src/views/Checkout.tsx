@@ -36,7 +36,7 @@ const Checkout = () => {
     cart.length === 0 && placedOrder.length !== 0 ? placedOrder : cart
   ).reduce(
     (acc, item) =>
-      acc + item.current_price[0]?.["NGN"]?.[0] * (item?.quantity ?? 1),
+      acc + item.current_price?.[0]?.["NGN"]?.[0] * (item?.quantity ?? 1),
     0
   )
   const shippingFee = subTotal * 0.18

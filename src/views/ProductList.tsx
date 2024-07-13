@@ -21,7 +21,7 @@ const ProductList = (props: Props) => {
     }
   })
   return products.length > 0 ? (
-    <div className="flex flex-col items-center gap-y-12">
+    <div className="flex flex-col items-center gap-y-10">
       <div className="grid w-full grid-cols-1 justify-center gap-4 bg-white min-[500px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <AnimatePresence>
           {newProducts.map((p, i) => (
