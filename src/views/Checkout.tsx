@@ -158,7 +158,6 @@ const Checkout = () => {
       layout="vertical"
       className="flex flex-col gap-6 lg:flex-row"
       onFinish={onCheckout}
-      onFinishFailed={(error) => console.log(error)}
       initialValues={formInitialValues}
       requiredMark={false}
     >
