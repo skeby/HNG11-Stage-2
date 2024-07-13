@@ -38,7 +38,7 @@ client.interceptors.response.use(
   (error) => {
     const status = error.response?.status
     if (status === 401) {
-      message.error("Session expired. Please login again.")
+      message.error("Session expired. Please login to Timbu Cloud again.")
       return null
     } else if (status >= 400 && status < 500) {
       return Promise.reject({

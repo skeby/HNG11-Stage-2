@@ -31,14 +31,10 @@ const useAppMutation = (mutationData: MutationData) => {
       return apiCall(data, path, method, extraHeaders, params, showLoader)
     },
     onSuccess: (data) => {
-      if (data.status === "success") {
-        queryClient.invalidateQueries({
-          queryKey: mutationKey,
-        })
-        onSuccess && onSuccess(data)
-      } else {
-        if (onError) onError(data)
-      }
+      queryClient.invalidateQueries({
+        queryKey: mutationKey,
+      })
+      onSuccess && onSuccess(data)
     },
     onError: () => {
       if (onError) onError()

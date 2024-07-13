@@ -80,17 +80,13 @@ const Cart = () => {
       ),
     },
     {
-      title: "AVAILABLE QUANTITY",
+      title: "QUANTITY LEFT IN STOCK",
       dataIndex: "available_quantity",
       key: "available_quantity",
       width: 20,
       render(value, record) {
         const availableQuantity = value - record.quantity
-        return (
-          <span className="text-sm">
-            {availableQuantity > 0 ? availableQuantity : "Out of stock"}
-          </span>
-        )
+        return <span className="text-sm">{availableQuantity}</span>
       },
     },
     {
@@ -152,10 +148,7 @@ const Cart = () => {
       width: 10,
       render: (value, record) => (
         <span className="text-sm font-medium">
-          ₦
-          {(
-            value[0]?.["NGN"]?.[0] * record.available_quantity
-          ).toLocaleString()}
+          ₦{(value[0]?.["NGN"]?.[0] * record.quantity).toLocaleString()}
         </span>
       ),
     },

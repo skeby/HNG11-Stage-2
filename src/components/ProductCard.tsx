@@ -13,11 +13,12 @@ import { Skeleton, Tooltip } from "antd"
 import CartIcon from "../assets/icons/cart.svg?react"
 import { motion } from "framer-motion"
 import { API_BASE_URL } from "../services/axiosClient"
+import { useAppQuery } from "../hooks/useAppQuery"
+import { paths } from "../static"
 
 export interface ProductCardProps extends Product {}
 
 const ProductCard = (props: ProductCardProps) => {
-  const [message, contextHolder] = useMessage()
   const {
     stars,
     ratings,
@@ -29,7 +30,18 @@ const ProductCard = (props: ProductCardProps) => {
     tags: tTags,
     loading,
   } = props
+
   const [previewVisible, setPreviewVisible] = useState(false)
+  const [message, contextHolder] = useMessage()
+
+  const { data, isSuccess, isLoading } = useAppQuery({
+    queryKey: ["product", { id: props.id }],
+    path: `${paths.products.get}/${props.id}`,
+    enabled: previewVisible,
+  })
+
+  const product = data as Product
+
   const dispatch = useAppDispatch()
   const { cart, favorites, isDataLoading } = useAppSelector(
     (state) => state.app
@@ -74,7 +86,7 @@ const ProductCard = (props: ProductCardProps) => {
         loading={isDataLoading || loading}
       >
         {contextHolder}
-        <div className="absolute z-10 flex items-center gap-2">
+        <div className="absolute left-4 right-4 z-10 flex flex-wrap items-center gap-2">
           {tags?.map((tag, i) => (
             <div
               key={i}
@@ -86,8 +98,23 @@ const ProductCard = (props: ProductCardProps) => {
           ))}
         </div>
         <AntdImage.PreviewGroup
-          items={photos?.map((photo) => `${API_BASE_URL}/images/${photo.url}`)}
-          preview
+          items={product?.photos?.map(
+            (photo) => `${API_BASE_URL}/images/${photo.url}`
+          )}
+          preview={{
+            visible: previewVisible && isSuccess && !isLoading,
+            onVisibleChange(value) {
+              setPreviewVisible(value)
+            },
+            toolbarRender: (originalNode) => (
+              <div className="flex flex-col items-center gap-y-3">
+                <p className="flex min-h-[45.75px] items-center justify-center rounded-[100px] bg-black/10 px-6 text-sm tracking-wide text-white/100">
+                  {name}
+                </p>
+                {originalNode}
+              </div>
+            ),
+          }}
         >
           <Image
             rootClassName="static"
@@ -96,12 +123,6 @@ const ProductCard = (props: ProductCardProps) => {
               objectFit: "cover",
             }}
             preview={{
-              visible: previewVisible,
-              onVisibleChange(value) {
-                if (!value) {
-                  setPreviewVisible(false)
-                }
-              },
               destroyOnClose: true,
               maskClassName: "!transition-all !duration-500 !bg-black/10",
               mask: (

@@ -23,9 +23,13 @@ const Checkout = () => {
   } = useAppMutation({
     mutationKey: ["checkout"],
     path: paths.sales.add,
-    onSuccess: () => {
-      setPlacedOrder(cart)
-      dispatch(setCart([]))
+    showLoader: false,
+    onSuccess: (data) => {
+      if (data) {
+        setPlacedOrder(cart)
+        dispatch(setCart([]))
+        animateScroll.scrollToTop()
+      }
     },
   })
   const { cart } = useAppSelector((state) => state.app)
