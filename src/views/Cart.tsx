@@ -189,11 +189,11 @@ const Cart = () => {
             className="overflow-auto"
           />
         </ConfigProvider>
-        <div className="flex items-center justify-between border-t border-[#E4E7E9] p-6">
-          <Link to={"/"}>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-[#E4E7E9] p-6 sm:flex-row">
+          <Link to={"/"} className="w-full sm:w-[200px]">
             <Button
               icon={<GoArrowLeft size={20} />}
-              className="h-12 w-[200px] rounded-sm border-[#2DA5F3] text-sm font-bold !text-[#2DA5F3] hover:!border-none hover:!bg-[#2DA5F3] hover:!text-white"
+              className="h-12 w-full rounded-sm border-[#2DA5F3] text-sm font-bold !text-[#2DA5F3] hover:!border-none hover:!bg-[#2DA5F3] hover:!text-white sm:w-[200px]"
             >
               RETURN TO SHOP
             </Button>
@@ -208,7 +208,7 @@ const Cart = () => {
                   className="flex-shrink-0"
                 />
               }
-              className="h-12 w-[200px] rounded-sm border-[#EE5858] text-sm font-bold !text-[#EE5858] hover:!bg-[#EE5858] hover:!text-white"
+              className="h-12 w-full rounded-sm border-[#EE5858] text-sm font-bold !text-[#EE5858] hover:!bg-[#EE5858] hover:!text-white sm:w-[200px]"
             >
               CLEAR CART
             </Button>
