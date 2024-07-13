@@ -1,10 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { Product } from "../../types"
-import { products } from "../../static"
-
 export interface AppState {
-  displayedProducts: Product[]
-  products: Product[]
   cart: Product[]
   favorites: Product[]
   searchQuery?: string
@@ -12,8 +8,6 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-  displayedProducts: [],
-  products,
   cart: [],
   favorites: [],
   searchQuery: "",
@@ -24,12 +18,6 @@ const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setProducts: (state, action: PayloadAction<Product[]>) => {
-      state.products = action.payload
-    },
-    setDisplayedProducts: (state, action: PayloadAction<Product[]>) => {
-      state.displayedProducts = action.payload
-    },
     setCart: (state, action: PayloadAction<Product[]>) => {
       state.cart = action.payload
     },
@@ -46,11 +34,5 @@ const appSlice = createSlice({
 })
 
 export default appSlice.reducer
-export const {
-  setProducts,
-  setCart,
-  setFavorites,
-  setSearchQuery,
-  setIsDataLoading,
-  setDisplayedProducts,
-} = appSlice.actions
+export const { setCart, setFavorites, setSearchQuery, setIsDataLoading } =
+  appSlice.actions

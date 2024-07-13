@@ -1,5 +1,6 @@
 import { IoStar } from "react-icons/io5"
 import Image from "./Image"
+import { Image as AntdImage } from "antd"
 import { IoIosStarOutline } from "react-icons/io"
 import HeartIcon from "./HeartIcon"
 import { LuEye } from "react-icons/lu"
@@ -8,22 +9,38 @@ import { useAppDispatch, useAppSelector } from "../state/store"
 import { setCart, setFavorites } from "../state/slices/appSlice"
 import useMessage from "antd/es/message/useMessage"
 import { Product } from "../types"
-import { Skeleton } from "antd"
+import { Skeleton, Tooltip } from "antd"
 import CartIcon from "../assets/icons/cart.svg?react"
 import { motion } from "framer-motion"
+import { API_BASE_URL } from "../services/axiosClient"
 
 export interface ProductCardProps extends Product {}
 
 const ProductCard = (props: ProductCardProps) => {
   const [message, contextHolder] = useMessage()
-  const { imageSrc, stars, ratings, price, title, tags, loading } = props
+  const {
+    stars,
+    ratings,
+    photos,
+    current_price,
+    available_quantity,
+    // quantity,
+    name,
+    tags,
+    loading,
+  } = props
   const [previewVisible, setPreviewVisible] = useState(false)
   const dispatch = useAppDispatch()
   const { cart, favorites, isDataLoading } = useAppSelector(
     (state) => state.app
   )
 
-  const shortenedTitle = `${title.slice(0, 10)}...`
+  const shortenedName = `${name?.slice(0, 10)}...`
+  const isItemAddedToCart = cart.some((p) => p.id === props.id)
+  const isFavorite = favorites.some((f) => f.id === props.id)
+
+  if (available_quantity === 0)
+    tags?.push({ title: "Out of stock", color: "#EE5858" })
 
   const addToCart = () => {
     const productExists = cart.find((item) => item.id === props.id)
@@ -46,7 +63,7 @@ const ProductCard = (props: ProductCardProps) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.5, type: "tween" }}
-      className="relative flex h-full cursor-pointer flex-col gap-y-6 rounded-[3px] border border-[#E4E7E9] p-4 transition-all duration-300 hover:border-[#C9CFD2] hover:shadow-xl"
+      className="relative flex h-full cursor-pointer flex-col gap-y-6 rounded-[3px] border border-[#E4E7E9] p-4 transition-all duration-300 hover:border-[#C9CFD2] hover:shadow-lg"
     >
       <Skeleton
         paragraph={{
@@ -67,77 +84,120 @@ const ProductCard = (props: ProductCardProps) => {
             </div>
           ))}
         </div>
-        <Image
-          preview={{
-            visible: previewVisible,
-            onVisibleChange(value) {
-              if (!value) {
-                setPreviewVisible(false)
-              }
-            },
-            destroyOnClose: true,
-            maskClassName: "!cursor-default",
-            mask: (
-              <div className="absolute flex items-center gap-x-2 px-2">
-                <HeartIcon
-                  isFavorite={favorites.some((f) => f.id === props.id)}
-                  onFavoriteChange={(isFavorite) => {
-                    message.success(
-                      isFavorite
-                        ? `${shortenedTitle} added to favorites`
-                        : `${shortenedTitle} removed from favorites`
-                    )
-                    if (isFavorite) {
-                      dispatch(setFavorites([...favorites, props]))
-                    } else {
-                      dispatch(
-                        setFavorites(favorites.filter((f) => f.id !== props.id))
-                      )
+        <AntdImage.PreviewGroup
+          items={photos?.map((photo) => `${API_BASE_URL}/images/${photo.url}`)}
+          preview
+        >
+          <Image
+            rootClassName="static"
+            preview={{
+              visible: previewVisible,
+              onVisibleChange(value) {
+                if (!value) {
+                  setPreviewVisible(false)
+                }
+              },
+              destroyOnClose: true,
+              maskClassName: "!transition-all !duration-500 !bg-black/10",
+              // maskAnimation: "all 5s linear",
+              mask: (
+                <div className="absolute flex items-center gap-x-2 px-2">
+                  <Tooltip
+                    title={
+                      isFavorite ? "Remove from favorite" : "Add to favorite"
                     }
-                  }}
-                />
-                <div
-                  className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-white duration-200 hover:scale-90"
-                  onClick={() => {
-                    addToCart()
-                    message.success(`${shortenedTitle} added to cart`)
-                  }}
-                >
-                  <CartIcon className="text-black" />
+                  >
+                    <>
+                      <HeartIcon
+                        isFavorite={isFavorite}
+                        onFavoriteChange={(isFavorite) => {
+                          message.success(
+                            isFavorite
+                              ? `${shortenedName} added to favorites`
+                              : `${shortenedName} removed from favorites`
+                          )
+                          if (isFavorite) {
+                            dispatch(setFavorites([...favorites, props]))
+                          } else {
+                            dispatch(
+                              setFavorites(
+                                favorites.filter((f) => f.id !== props.id)
+                              )
+                            )
+                          }
+                        }}
+                      />
+                    </>
+                  </Tooltip>
+                  {available_quantity !== 0 && (
+                    <Tooltip
+                      title={
+                        isItemAddedToCart
+                          ? "Item already added to cart"
+                          : "Add to cart"
+                      }
+                    >
+                      <div
+                        className={`flex size-12 ${isItemAddedToCart ? "cursor-not-allowed" : "cursor-pointer"} items-center justify-center rounded-full bg-white duration-200 hover:scale-90`}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (!isItemAddedToCart) {
+                            addToCart()
+                            message.success(`${shortenedName} added to cart`)
+                          }
+                        }}
+                      >
+                        <CartIcon className="text-black" />
+                      </div>
+                    </Tooltip>
+                  )}
+                  {photos.length > 0 && (
+                    <Tooltip
+                      title={photos.length > 1 ? "View images" : "View image"}
+                    >
+                      <div
+                        className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-[#FF7F50] duration-200 hover:scale-90"
+                        onClick={() => setPreviewVisible(true)}
+                      >
+                        <LuEye size={24} className="text-white" />
+                      </div>
+                    </Tooltip>
+                  )}
                 </div>
-                <div
-                  className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-[#FF7F50] duration-200 hover:scale-90"
-                  onClick={() => setPreviewVisible(true)}
-                >
-                  <LuEye size={24} className="text-white" />
-                </div>
-              </div>
-            ),
-          }}
-          src={imageSrc}
-          alt={title}
-          className="!h-[172px] !max-w-[100px]"
-        />
+              ),
+            }}
+            src={
+              photos?.[0]?.url
+                ? `${API_BASE_URL}/images/${photos?.[0]?.url}`
+                : undefined
+            }
+            alt={name}
+            className="!h-[172px] !max-w-[100px]"
+          />
+        </AntdImage.PreviewGroup>
         <div className="flex flex-col gap-y-2">
           <div className="flex gap-x-1">
             <div className="flex items-center">
               {[...Array(stars)].map((_s, i) => (
                 <IoStar key={i} size={16} className="text-[#FF7F50]" />
               ))}
-              {[...Array(5 - stars)].map((_s, i) => (
-                <IoIosStarOutline
-                  key={i}
-                  size={16}
-                  className="text-[#ADB7BC]"
-                />
-              ))}
+              {stars > 0 &&
+                [...Array(5 - stars)].map((_s, i) => (
+                  <IoIosStarOutline
+                    key={i}
+                    size={16}
+                    className="text-[#ADB7BC]"
+                  />
+                ))}
             </div>
             <p className="text-xs text-[#5d6468]">({ratings})</p>
           </div>
           <p className="h-10 overflow-hidden overflow-ellipsis text-sm">
-            {title}
+            {name}
           </p>
-          <p className="text-[#2DA5F3]">₦{price.toLocaleString()}</p>
+          <p className="text-[#2DA5F3]">
+            ₦{current_price[0]?.["NGN"]?.[0].toLocaleString()}
+          </p>
         </div>
       </Skeleton>
     </motion.div>

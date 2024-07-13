@@ -14,7 +14,7 @@ const queryClientOptions = {
   defaultOptions: {
     queries: {
       // staleTime: 0,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     },
   },
 }

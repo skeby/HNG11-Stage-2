@@ -46,19 +46,11 @@ export const apiCall = async (
     }
 
     const responseData: any = res.data
-    if (responseData.status === "success") {
-      message.destroy()
-      if (method !== "get") {
-        message.success(responseData.message)
-      }
-      return responseData
-    } else {
-      const errorMessage = responseData.message || "Something went wrong!"
-      if (method !== "get") {
-        message.error(errorMessage, 6)
-      }
-      return responseData
+    message.destroy()
+    if (method !== "get" && responseData.message) {
+      message.success(responseData.message)
     }
+    return responseData
   } catch (error: any) {
     const errorMessage = error.message ? error.message : "Something went wrong!"
     message.destroy()

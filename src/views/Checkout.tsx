@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Radio } from "antd"
+import { Button, Checkbox, Form, FormProps, Radio } from "antd"
 import { useAppDispatch, useAppSelector } from "../state/store"
 import { GoArrowRight } from "react-icons/go"
 import { Link } from "react-router-dom"
@@ -6,19 +6,39 @@ import Input from "../components/Input"
 import Select from "../components/Select"
 import TextArea from "antd/es/input/TextArea"
 import { setCart } from "../state/slices/appSlice"
-import { paymentOptions } from "../static"
+import { paths, paymentOptions, validation } from "../static"
 import { useState } from "react"
-import { Product } from "../types"
+import { CheckoutFormFields, Product } from "../types"
 import CheckCircleIcon from "../assets/icons/check-circle.svg?react"
+import { API_BASE_URL } from "../services/axiosClient"
+import { animateScroll } from "react-scroll"
+import { useAppMutation } from "../hooks/useAppMutation"
+import { ORGANIZATION_ID } from "../config/env"
 
 const Checkout = () => {
+  const {
+    mutate: createSale,
+    isPending,
+    isSuccess,
+  } = useAppMutation({
+    mutationKey: ["checkout"],
+    path: paths.sales.add,
+    onSuccess: () => {
+      setPlacedOrder(cart)
+      dispatch(setCart([]))
+    },
+  })
   const { cart } = useAppSelector((state) => state.app)
   const [showOrder, setShowOrder] = useState(false)
   const [placedOrder, setPlacedOrder] = useState<Product[]>([])
   const dispatch = useAppDispatch()
   const subTotal = (
     cart.length === 0 && placedOrder.length !== 0 ? placedOrder : cart
-  ).reduce((acc, item) => acc + item.price * (item?.quantity ?? 1), 0)
+  ).reduce(
+    (acc, item) =>
+      acc + item.current_price[0]?.["NGN"]?.[0] * (item?.quantity ?? 1),
+    0
+  )
   const shippingFee = subTotal * 0.18
   const cartTotals = [
     {
@@ -40,6 +60,35 @@ const Checkout = () => {
   ]
   const grandTotal = cartTotals.reduce((acc, item) => acc + item.value, 0)
 
+  const formInitialValues: CheckoutFormFields = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    address: "",
+    country_code: "+234",
+    mode_of_payment: "",
+    description: "",
+  }
+
+  const onCheckout: FormProps<CheckoutFormFields>["onFinish"] = (values) => {
+    const { address, mode_of_payment, ...rest } = values
+    const data = {
+      organization_id: ORGANIZATION_ID,
+      products_sold: cart.map((item) => ({
+        product_id: item.id,
+        amount: item.current_price[0]?.["NGN"]?.[0],
+        quantity: item.quantity,
+        currency_code: "NGN",
+      })),
+      currency_code: "NGN",
+      sales_status: "pending",
+      // customer_title: "Testing Customer"
+      ...rest,
+    }
+    createSale(data)
+  }
+
   const OrderSummary = ({ orders }: { orders: Product[] }) => (
     <>
       <div className="p-6 text-lg font-medium">Order Summary</div>
@@ -47,17 +96,17 @@ const Checkout = () => {
         {orders.map((item) => (
           <div key={item.id} className="flex h-16 items-center gap-x-4">
             <img
-              src={item.imageSrc}
+              src={`${API_BASE_URL}/images/${item.photos?.[0]?.url}`}
               className="size-16 rounded-sm object-cover"
             />
             <div>
               <p className="mb-[6px] text-sm text-[#191C1F]">
-                {item.title.slice(0, 30)}...
+                {item.name.slice(0, 30)}...
               </p>
               <p className="text-sm">
                 <span className="text-[#5F6C72]">{item.quantity} x </span>
                 <span className="text-[#2DA5F3]">
-                  ₦{item.price.toLocaleString()}
+                  ₦{item.current_price[0]?.["NGN"]?.[0].toLocaleString()}
                 </span>
               </p>
             </div>
@@ -83,17 +132,34 @@ const Checkout = () => {
   )
 
   const OrderPreviewSection = (
-    <div className="flex flex-col gap-6 lg:flex-row">
-      <Form className="lg:w-[60%]" layout="vertical" id="checkout-form">
+    <Form
+      layout="vertical"
+      className="flex flex-col gap-6 lg:flex-row"
+      onFinish={onCheckout}
+      onFinishFailed={(error) => console.log(error)}
+      initialValues={formInitialValues}
+      requiredMark={false}
+    >
+      <div className="lg:w-[60%]">
         <p className="mb-6 text-lg font-medium">Billing Information</p>
         <div className="flex flex-col gap-y-10">
           <div className="flex flex-col gap-4 text-sm">
             <div className="flex flex-col gap-4 sm:flex-row">
-              <div className="flex w-full flex-col items-end gap-4 sm:flex-row">
-                <Form.Item label="User name" className="w-full">
+              <div className="flex w-full flex-col gap-4 sm:flex-row">
+                <Form.Item<CheckoutFormFields>
+                  name={"first_name"}
+                  label="Name"
+                  className="w-full"
+                  rules={[{ required: true, message: validation.required }]}
+                >
                   <Input placeholder="First name" />
                 </Form.Item>
-                <Form.Item className="w-full">
+                <Form.Item
+                  name={"last_name"}
+                  className="w-full"
+                  label="v"
+                  rules={[{ required: true, message: validation.required }]}
+                >
                   <Input placeholder="Last name" />
                 </Form.Item>
               </div>
@@ -128,11 +194,51 @@ const Checkout = () => {
               </Form.Item>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Form.Item label="Email" className="w-full">
+              <Form.Item
+                name={"email"}
+                label="Email"
+                className="w-full"
+                rules={[{ required: true, message: validation.email }]}
+              >
                 <Input />
               </Form.Item>
-              <Form.Item label="Phone number" className="w-full">
-                <Input />
+              <Form.Item
+                name={"phone"}
+                label="Phone number"
+                className="w-full"
+                rules={[{ required: true, message: validation.required }]}
+              >
+                <Input
+                  prefix={
+                    <Form.Item
+                      name={"country_code"}
+                      rules={[{ required: true, message: validation.required }]}
+                      className="!w-20"
+                    >
+                      <Select
+                        className="!h-[34px]"
+                        options={[
+                          { value: "+234", label: "+234" },
+                          { value: "+233", label: "+233" },
+                        ]}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </Form.Item>
+                  }
+                  classNames={{
+                    input:
+                      "placeholder:text-[#77878F] !w-full h-[34px] rounded-sm border-[#E4E7E9]",
+                    wrapper: "!h-11 !px-1",
+                    affixWrapper: "!h-11 !px-1",
+                    prefix: "!h-[34px]",
+                  }}
+                  styles={{
+                    affixWrapper: {
+                      borderRadius: "2px",
+                      padding: "4px",
+                    },
+                  }}
+                />
               </Form.Item>
             </div>
             <Form.Item
@@ -146,25 +252,35 @@ const Checkout = () => {
           <div className="flex flex-col gap-y-5 rounded border border-[#E4E7E9]">
             <p className="px-8 pt-5 text-lg font-medium">Payment Option</p>
             <div className="border-y border-[#E4E7E9] p-6">
-              <Radio.Group className="flex w-full flex-col sm:flex-row">
-                {paymentOptions.map((option, i) => (
-                  <Form.Item
-                    key={i}
-                    label={
+              {/* TODO: Fix this design */}
+              <Form.Item
+                layout="vertical"
+                name={"mode_of_payment"}
+                rules={[{ required: true, message: validation.required }]}
+                // label={
+                //   <div className="flex w-full flex-col items-center justify-center gap-y-2 text-center">
+                //     {option.icon}
+                //     <p className="text-sm font-medium">{option.title}</p>
+                //   </div>
+                // }
+                // rootClassName={`w-full flex items-center justify-center sm:px-2 ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
+                rootClassName={`w-full flex items-center justify-center sm:px-2 ${paymentOptions.length !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
+              >
+                <Radio.Group className="flex w-full flex-col sm:flex-row">
+                  {paymentOptions.map((option, i) => (
+                    <Radio
+                      key={i}
+                      value={option.title}
+                      className="flex w-auto items-center justify-center"
+                    >
                       <div className="flex w-full flex-col items-center justify-center gap-y-2 text-center">
                         {option.icon}
                         <p className="text-sm font-medium">{option.title}</p>
                       </div>
-                    }
-                    rootClassName={`w-full flex items-center justify-center sm:px-2 ${i !== 0 ? "sm:border-l border-t sm:border-t-0 pt-3 sm:pt-0  border-[#E4E7E9]" : "border-none"}`}
-                  >
-                    <Radio
-                      value={option.title}
-                      className="flex w-auto items-center justify-center"
-                    />
-                  </Form.Item>
-                ))}
-              </Radio.Group>
+                    </Radio>
+                  ))}
+                </Radio.Group>
+              </Form.Item>
             </div>
             <div className="flex flex-col gap-y-4 p-8 pt-3">
               <Form.Item label="Name on Card">
@@ -203,17 +319,14 @@ const Checkout = () => {
             </Form.Item>
           </div>
         </div>
-      </Form>
+      </div>
       <div className="h-fit overflow-hidden rounded-[4px] border border-[#E4E7E9] lg:w-[40%]">
         <OrderSummary orders={cart} />
         {subTotal > 0 && (
           <div className="px-6 pb-6">
             <Button
-              onClick={() => {
-                setPlacedOrder(cart)
-                dispatch(setCart([]))
-              }}
-              form="checkout-form"
+              loading={isPending}
+              htmlType="submit"
               iconPosition="end"
               icon={<GoArrowRight size={20} />}
               className="h-14 w-full bg-[#FF7F50] font-bold uppercase text-white hover:!border-[#FF7F50] hover:!text-[#FF7F50]"
@@ -223,7 +336,7 @@ const Checkout = () => {
           </div>
         )}
       </div>
-    </div>
+    </Form>
   )
 
   const OrderSuccessfulSection = (
@@ -242,7 +355,10 @@ const Checkout = () => {
           </Button>
         </Link>
         <Button
-          onClick={() => setShowOrder(true)}
+          onClick={() => {
+            setShowOrder(true)
+            animateScroll.scrollToTop()
+          }}
           iconPosition="end"
           icon={<GoArrowRight size={20} />}
           className="h-12 w-full rounded bg-[#FF7F50] px-6 text-sm font-bold uppercase text-white hover:!border-2 hover:!text-[#FF7F50] min-[500px]:w-[160px]"
@@ -268,7 +384,7 @@ const Checkout = () => {
 
   return showOrder
     ? ViewOrderSection
-    : placedOrder && placedOrder.length > 0
+    : placedOrder && placedOrder.length > 0 && isSuccess
       ? OrderSuccessfulSection
       : OrderPreviewSection
 }

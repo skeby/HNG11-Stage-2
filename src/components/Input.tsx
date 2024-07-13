@@ -6,12 +6,12 @@ const Input = (props: Props) => {
   return (
     <AntdInput
       {...rest}
-      classNames={
-        classNames ?? {
-          input:
-            "placeholder:text-[#77878F] !w-full h-11 rounded-sm border-[#E4E7E9]",
-        }
-      }
+      classNames={{
+        ...classNames,
+        input:
+          classNames?.input ??
+          "placeholder:text-[#77878F] !w-full h-11 rounded-sm border-[#E4E7E9]",
+      }}
     />
   )
 }

@@ -9,7 +9,10 @@ const HeartIcon = ({ isFavorite, onFavoriteChange }: Props) => {
   return (
     <div
       className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-white duration-200 hover:scale-90"
-      onClick={() => onFavoriteChange && onFavoriteChange(!isFavorite)}
+      onClick={(e) => {
+        e.stopPropagation()
+        onFavoriteChange && onFavoriteChange(!isFavorite)
+      }}
     >
       <div className="relative size-6">
         <GoHeartFill

@@ -3,10 +3,10 @@ import { message } from "antd"
 import { API_KEY, APP_ID, ORGANIZATION_ID } from "../config/env"
 
 console.log("windows_host", window.location.hostname)
-export const API_BASE_URL = "https://api.timbu.cloud/"
+export const API_BASE_URL = "https://api.timbu.cloud"
 
 const client = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "/api",
   headers: {
     Accept: "application/json",
   },

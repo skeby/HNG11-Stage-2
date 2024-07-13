@@ -1,16 +1,25 @@
-import { Button, ConfigProvider, Table, TableProps, Tooltip } from "antd"
+import {
+  Button,
+  ConfigProvider,
+  message,
+  Table,
+  TableProps,
+  Tooltip,
+} from "antd"
 import { Product } from "../types"
 import { useAppDispatch, useAppSelector } from "../state/store"
 import { GoArrowLeft, GoArrowRight, GoXCircle } from "react-icons/go"
 import { Link } from "react-router-dom"
 import { setCart } from "../state/slices/appSlice"
 import { FiMinus, FiPlus } from "react-icons/fi"
+import { API_BASE_URL } from "../services/axiosClient"
 
 const Cart = () => {
   const { cart } = useAppSelector((state) => state.app)
   const dispatch = useAppDispatch()
   const subTotal = cart.reduce(
-    (acc, item) => acc + item.price * (item?.quantity ?? 1),
+    (acc, item) =>
+      acc + item.current_price[0]?.["NGN"]?.[0] * (item?.quantity ?? 1),
     0
   )
   const shippingFee = subTotal * 0.18
@@ -50,23 +59,39 @@ const Cart = () => {
           <img
             width={72}
             height={72}
-            src={record.imageSrc}
+            src={`${API_BASE_URL}/images/${record.photos?.[0]?.url}`}
             className="!size-[72px] !rounded-sm object-cover"
           />
-          <Tooltip title={record.title}>
-            <span className="text-sm">{record.title.slice(0, 15)}...</span>
+          <Tooltip title={record.name}>
+            <span className="text-sm">{record.name.slice(0, 15)}...</span>
           </Tooltip>
         </div>
       ),
     },
     {
       title: "PRICE",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "current_price",
+      key: "current_price",
       width: 20,
       render: (value) => (
-        <span className="text-sm">₦{value.toLocaleString()}</span>
+        <span className="text-sm">
+          ₦{value[0]?.["NGN"]?.[0].toLocaleString()}
+        </span>
       ),
+    },
+    {
+      title: "AVAILABLE QUANTITY",
+      dataIndex: "available_quantity",
+      key: "available_quantity",
+      width: 20,
+      render(value, record) {
+        const availableQuantity = value - record.quantity
+        return (
+          <span className="text-sm">
+            {availableQuantity > 0 ? availableQuantity : "Out of stock"}
+          </span>
+        )
+      },
     },
     {
       title: "QUANTITY",
@@ -96,17 +121,23 @@ const Cart = () => {
               className={`flex-shrink-0 ${value > 1 ? "text-[#191C1F]" : "text-[#929FA5]"}`}
             />
           </div>
-          <p className="txt-[#475156] text-base">{value}</p>
+          <p className="text-base text-[#475156]">{value}</p>
           <div
             className="cursor-pointer rounded-sm p-1 transition-all duration-300 hover:bg-[#E4E7E9]"
             onClick={() => {
-              dispatch(
-                setCart(
-                  cart.map((i) =>
-                    i.id === record.id ? { ...i, quantity: i.quantity + 1 } : i
+              if (record.available_quantity > record.quantity) {
+                dispatch(
+                  setCart(
+                    cart.map((i) =>
+                      i.id === record.id
+                        ? { ...i, quantity: i.quantity + 1 }
+                        : i
+                    )
                   )
                 )
-              )
+              } else {
+                message.error("You can't add more than the available quantity")
+              }
             }}
           >
             <FiPlus size={16} className={`flex-shrink-0 text-[#191C1F]`} />
@@ -116,11 +147,16 @@ const Cart = () => {
     },
     {
       title: "SUB-TOTAL",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "current_price",
+      key: "current_price",
       width: 10,
-      render: (value) => (
-        <span className="text-sm font-medium">₦{value.toLocaleString()}</span>
+      render: (value, record) => (
+        <span className="text-sm font-medium">
+          ₦
+          {(
+            value[0]?.["NGN"]?.[0] * record.available_quantity
+          ).toLocaleString()}
+        </span>
       ),
     },
   ]

@@ -6,8 +6,8 @@ import { NavLink, useLocation } from "react-router-dom"
 import CartIcon from "../components/CartIcon"
 import Logo from "./Logo"
 import useDebounce from "../hooks/useDebounce"
-import { useAppDispatch, useAppSelector } from "../state/store"
-import { setDisplayedProducts, setSearchQuery } from "../state/slices/appSlice"
+import { useAppDispatch } from "../state/store"
+import { setSearchQuery } from "../state/slices/appSlice"
 import SearchIcon from "../assets/icons/search.svg?react"
 import BreadcrumbSeparator from "../assets/icons/breadcrumb-separator.svg?react"
 import { breadCrumbItems } from "../static"
@@ -17,7 +17,6 @@ const Navbar = () => {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const debouncedSearch = useDebounce(search.toLowerCase(), 500, true)
-  const { products, favorites } = useAppSelector((state) => state.app)
   const breadCrumbItemRender = (route: any) => {
     const isActive = route.path === location.pathname
     return isActive ? (
@@ -30,21 +29,8 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    const pathname = location.pathname
-    const page = pathname.split("/")[pathname.split("/").length - 1]
-    const currentProducts = page === "favorites" ? favorites : products
-    const filteredData = currentProducts.filter(
-      (p) =>
-        p.title.toLowerCase().includes(debouncedSearch) ||
-        p.tags?.some((t) => t.title.toLowerCase().includes(debouncedSearch))
-    )
     dispatch(setSearchQuery(debouncedSearch))
-    dispatch(
-      setDisplayedProducts(
-        debouncedSearch !== "" ? filteredData : currentProducts
-      )
-    )
-  }, [debouncedSearch, location.pathname, favorites])
+  }, [debouncedSearch])
   return (
     <>
       <div className="sticky top-0 z-50 bg-primary">
