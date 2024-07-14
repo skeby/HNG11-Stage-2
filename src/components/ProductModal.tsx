@@ -74,7 +74,7 @@ const ProductModal = ({
         </div>
       }
     >
-      <Carousel arrows autoplay rootClassName="!rounded-xl !overflow-hidden">
+      <Carousel arrows rootClassName="!rounded-xl !overflow-hidden">
         {product.photos.map((photo, i) => (
           <ConfigProvider
             theme={{
@@ -88,10 +88,9 @@ const ProductModal = ({
           >
             <Image
               key={i}
-              rootClassName="w-full"
+              rootClassName="w-full sm:h-[400px] h-[300px] md:h-[350px] max-h-[400px] duration-500"
               style={{
-                maxHeight: 400,
-                height: 400,
+                height: "100%",
                 objectFit: "cover",
                 borderRadius: 12,
               }}
