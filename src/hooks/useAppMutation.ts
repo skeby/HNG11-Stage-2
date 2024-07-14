@@ -1,14 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { apiCall } from "../services"
+import { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios"
+import { RequestBody } from "../types"
 
 interface MutationData {
-  mutationKey: any[]
+  mutationKey: unknown[]
   path: string
-  onSuccess?: (data: any) => void
-  onError?: (data?: any) => void
+  onSuccess?: (data: RequestBody) => void
+  onError?: () => void
   method?: string
-  extraHeaders?: any
-  params?: any
+  extraHeaders?: Partial<RawAxiosRequestHeaders>
+  params?: AxiosRequestConfig<any>["params"]
   showLoader?: boolean
 }
 
@@ -27,7 +29,7 @@ const useAppMutation = (mutationData: MutationData) => {
 
   return useMutation({
     mutationKey,
-    mutationFn: (data: any) => {
+    mutationFn: (data: RequestBody) => {
       return apiCall(data, path, method, extraHeaders, params, showLoader)
     },
     onSuccess: (data) => {

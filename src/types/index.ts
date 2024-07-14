@@ -50,3 +50,30 @@ export interface CheckoutFormFields {
   mode_of_payment: string
   description: string
 }
+
+export interface ICheckoutBody {
+  unique_id?: string
+  customer_id?: string
+  organization_id: string
+  products_sold: {
+    product_id: string
+    amount: string
+    quantity: number
+    discount: number
+    currency_code: string
+  }[]
+  purchased_for?: string
+  discount?: number
+  currency_code: string
+  customer_title?: string
+  first_name?: string
+  last_name?: string
+  email?: string
+  phone?: string
+  country_code?: string
+  mode_of_payment?: string
+  sales_status?: string
+  description?: string
+}
+
+export type RequestBody = ICheckoutBody | {}

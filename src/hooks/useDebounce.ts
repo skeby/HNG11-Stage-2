@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../state/store"
 import { setIsDataLoading } from "../state/slices/appSlice"
 
-const useDebounce = (value: any, delay: number, showLoader = false) => {
+const useDebounce = (value: string, delay: number, showLoader = false) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
   const { isDataLoading } = useAppSelector((state) => state.app)
   const dispatch = useAppDispatch()

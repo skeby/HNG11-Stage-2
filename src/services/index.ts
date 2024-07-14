@@ -7,11 +7,12 @@ import {
 } from "axios"
 import { message } from "antd"
 import { MessageType } from "antd/es/message/interface"
+import { RequestBody } from "../types"
 
 let hide: MessageType
 
 export const apiCall = async (
-  body: any,
+  body: RequestBody,
   path: string,
   method: string,
   extraHeaders?: Partial<RawAxiosRequestHeaders>,

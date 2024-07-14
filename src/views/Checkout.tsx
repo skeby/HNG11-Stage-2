@@ -22,7 +22,7 @@ const Checkout = () => {
     isPending,
     isSuccess,
   } = useAppMutation({
-    mutationKey: ["checkout"],
+    mutationKey: ["products"],
     path: paths.sales.add,
     showLoader: false,
     onSuccess: (data) => {

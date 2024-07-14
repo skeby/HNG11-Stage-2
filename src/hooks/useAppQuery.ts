@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { apiCall } from "../services"
+import { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios"
 
 interface QueryData {
-  queryKey: any[]
+  queryKey: unknown[]
   path: string
   enabled?: boolean
   refetchOnMount?: boolean
-  extraHeaders?: any
-  params?: any
+  extraHeaders?: Partial<RawAxiosRequestHeaders>
+  params?: AxiosRequestConfig<any>["params"]
   showLoader?: boolean
 }
 
