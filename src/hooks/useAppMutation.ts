@@ -6,7 +6,7 @@ import { RequestBody } from "../types"
 interface MutationData {
   mutationKey: unknown[]
   path: string
-  onSuccess?: (data: RequestBody) => void
+  onSuccess?: (data: any) => void
   onError?: () => void
   method?: string
   extraHeaders?: Partial<RawAxiosRequestHeaders>
