@@ -4,6 +4,7 @@ import HeartIcon from "./HeartIcon"
 import { ReactNode } from "react"
 import Image from "./Image"
 import { API_BASE_URL } from "../services/axiosClient"
+import { ImCancelCircle } from "react-icons/im"
 
 interface Props {
   shortenedName: string
@@ -37,7 +38,12 @@ const ProductModal = ({
     <Modal
       centered
       open={isOpen}
-      closeIcon={null}
+      closeIcon={
+        <ImCancelCircle
+          className="hover:!bg-[transparent] group-hover:!bg-[transparent] peer-hover:!bg-[transparent]"
+          size={24}
+        />
+      }
       classNames={{
         header: "left-0",
         content: "!rounded-xl !px-5 !py-5",
@@ -77,6 +83,7 @@ const ProductModal = ({
       <Carousel arrows rootClassName="!rounded-xl !overflow-hidden">
         {product.photos.map((photo, i) => (
           <ConfigProvider
+            key={i}
             theme={{
               components: {
                 Image: {
@@ -87,7 +94,6 @@ const ProductModal = ({
             }}
           >
             <Image
-              key={i}
               rootClassName="w-full sm:h-[400px] h-[300px] md:h-[350px] max-h-[400px] duration-500"
               style={{
                 height: "100%",

@@ -40,3 +40,9 @@ body {
 .ant-pagination-item:hover {
   background: none !important;
 }
+
+.ant-modal-close {
+  top: 24px !important;
+  right: 24px !important;
+  border-radius: 100% !important;
+}
