@@ -37,7 +37,7 @@ export const themeConfig: ThemeConfig = {
       colorPrimary: "#BF5700",
     },
     Button: {
-      defaultHoverBorderColor: "#FF7F50",
+      defaultHoverBorderColor: "#BF5700",
     },
     Tooltip: {
       borderRadius: 12,

@@ -11,13 +11,14 @@ import { setSearchQuery } from "../state/slices/appSlice"
 import SearchIcon from "../assets/icons/search.svg?react"
 import BreadcrumbSeparator from "../assets/icons/breadcrumb-separator.svg?react"
 import { breadCrumbItems } from "../static"
+import { ItemType } from "antd/es/breadcrumb/Breadcrumb"
 
 const Navbar = () => {
   const [search, setSearch] = useState("")
   const dispatch = useAppDispatch()
   const location = useLocation()
   const debouncedSearch = useDebounce(search.toLowerCase(), 500, true)
-  const breadCrumbItemRender = (route: any) => {
+  const breadCrumbItemRender = (route: ItemType) => {
     const isActive = route.path === location.pathname
     return isActive ? (
       <span className="!font-medium text-[#2DA5F3]">{route.title}</span>

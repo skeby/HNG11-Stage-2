@@ -6,7 +6,6 @@ export const API_BASE_URL = "https://api.timbu.cloud"
 
 const client = axios.create({
   baseURL: "/api",
-  // baseURL: API_BASE_URL,
   headers: {
     Accept: "application/json",
   },

@@ -1,15 +1,21 @@
 import axiosClient from "./axiosClient"
-import { AxiosResponse } from "axios"
+import {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  RawAxiosRequestHeaders,
+} from "axios"
 import { message } from "antd"
+import { MessageType } from "antd/es/message/interface"
 
-let hide: any
+let hide: MessageType
 
 export const apiCall = async (
   body: any,
   path: string,
   method: string,
-  extraHeaders?: any,
-  params?: any,
+  extraHeaders?: Partial<RawAxiosRequestHeaders>,
+  params?: AxiosRequestConfig<any>["params"],
   showLoader = true
 ) => {
   try {
@@ -45,14 +51,16 @@ export const apiCall = async (
       throw new Error("Empty response from server")
     }
 
-    const responseData: any = res.data
+    const responseData: AxiosResponse<any, any>["data"] = res.data
     message.destroy()
     if (method !== "get" && responseData.message) {
       message.success(responseData.message)
     }
     return responseData
-  } catch (error: any) {
-    const errorMessage = error.message ? error.message : "Something went wrong!"
+  } catch (error) {
+    const errorMessage = (error as AxiosError).message
+      ? (error as AxiosError).message
+      : "Something went wrong!"
     message.destroy()
     message.error(errorMessage, 6)
     return false

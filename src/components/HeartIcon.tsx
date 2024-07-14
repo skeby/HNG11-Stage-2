@@ -3,12 +3,20 @@ import { GoHeart, GoHeartFill } from "react-icons/go"
 interface Props {
   isFavorite: boolean
   onFavoriteChange?: (isFavorite: boolean) => void
+  className?: string
 }
 
-const HeartIcon = ({ isFavorite, onFavoriteChange }: Props) => {
+const HeartIcon = ({
+  isFavorite,
+  onFavoriteChange,
+  className = "hover:scale-90 rounded-full size-12 bg-white",
+}: Props) => {
   return (
     <div
-      className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-white duration-200 hover:scale-90"
+      className={
+        "flex cursor-pointer items-center justify-center duration-200 " +
+        className
+      }
       onClick={(e) => {
         e.stopPropagation()
         onFavoriteChange && onFavoriteChange(!isFavorite)
